@@ -41,7 +41,7 @@ export default function App() {
     const newWidths = [...widths];
     newWidths[index] = preWidthforCurrent + (diff / totalWidth) * 100;
     newWidths[index + 1] = preWidthforNextOne - (diff / totalWidth) * 100;
-    if (newWidths[index] < 20 || newWidths[index + 1] < 20) {
+    if (newWidths[index] < 10 || newWidths[index + 1] < 10) {
       return;
     }
     if (newWidths[3] < 15) {
