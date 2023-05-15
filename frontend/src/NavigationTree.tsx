@@ -1,7 +1,22 @@
-import React from 'react';
+import React, { FC } from 'react';
 
-const NavigationTree = ({ data }) => {
-  const renderLinks = (links) => (
+type LinkType = {
+  url: string;
+  text: string;
+  sub_links?: LinkType[];
+};
+
+type DataType = {
+  title: string;
+  navigation_links: LinkType[];
+};
+
+interface NavigationTreeProps {
+  data: DataType[];
+}
+
+const NavigationTree: FC<NavigationTreeProps> = ({ data }) => {
+  const renderLinks = (links: LinkType[]) => (
     <ul>
       {links.map((link, i) => (
         <li key={i}>
