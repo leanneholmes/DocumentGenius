@@ -46,3 +46,25 @@
   margin-left: 2rem;
   margin-right: 2rem;
 }
+
+.AnsFromDocument h1 {
+  color: #9b59b6; /* 텍스트 색상 (보라색) */
+  font-size: 32px;
+  font-weight: bold;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.AnsFromDocument p {
+  margin-left: 2rem;
+  margin-bottom: 1rem;
+}
+
+.AnsFromDocument nav {
+  margin-left: 2rem;
+  margin-bottom: 1rem;
+}
+
+.AnsFromDocument .topicref {
+  margin-bottom: 5px;
+}

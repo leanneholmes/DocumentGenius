@@ -15,7 +15,7 @@ export default function DocWindow(props: { html: string }) {
 
   return (
     <>
-      <div dangerouslySetInnerHTML={{ __html: props.html }} />
+      <div className="AnsFromDocument" dangerouslySetInnerHTML={{ __html: props.html }} />
     </>
   );
 }
