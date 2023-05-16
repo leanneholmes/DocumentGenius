@@ -20,7 +20,7 @@ export default function QueryPage() {
     <>
       <div className="wrapper">
         <div className="docNavigation">
-          <DocNavigation index={index} />
+          <DocNavigation index={index} onLinkClicked={handleHtmlChange} />
         </div>
         <div className="docWindow">
           <DocWindow html={html} />

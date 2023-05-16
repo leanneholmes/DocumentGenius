@@ -1,20 +1,25 @@
 import NavigationTree from './NavigationTree';
-export default function DocNavigation(props: { index: string }) {
+interface DocNavigationProps {
+  onLinkClicked: (data: string) => void;
+}
+
+export default function DocNavigation(props: {
+  index: string;
+  onLinkClicked: DocNavigationProps;
+}) {
   if (props.index === '') {
     return <div></div>;
   }
 
   let parseData = JSON.parse(props.index);
-  // console.log('parsed');
-  // console.log(parseData);
-  parseData.forEach(function1);
-  function function1(currentValue: string, index: string) {
-    console.log('Index is: ' + index + ' Value is: ' + currentValue);
-  }
+  console.log(parseData);
 
   return (
     <>
-      <NavigationTree data={parseData}></NavigationTree>
+      <NavigationTree
+        data={parseData}
+        onLinkClicked={onLinkClicked}
+      ></NavigationTree>
     </>
   );
 }
