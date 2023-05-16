@@ -11,7 +11,7 @@ dotenv.load_dotenv()
 # Replace 'YOUR_BOT_TOKEN' with your bot's token
 TOKEN = os.getenv("DISCORD_TOKEN")
 PREFIX = '@DocsGPT'
-BASE_API_URL = 'http://localhost:5001'
+BASE_API_URL = os.environ.get('API_URL')
 
 intents = discord.Intents.default()
 intents.message_content = True
