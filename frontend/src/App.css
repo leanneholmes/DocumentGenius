@@ -29,13 +29,20 @@
 }
 
 .docWindows h1 {
-  font-size: 2.5rem;
+  font-size: 2rem;
   font-weight: 600;
   margin-bottom: 2rem;
   text-align: center;
+  margin-left: 1rem;
+  margin-right: 1rem;
+  padding: 1.5rem;
+  border-radius: 10px;
+  background-color: #eae9ef;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .docWindows p {
+  margin-bottom: 1rem;
   margin-left: 2rem;
   margin-right: 2rem;
 }
