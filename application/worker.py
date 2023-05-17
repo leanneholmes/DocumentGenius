@@ -39,11 +39,7 @@ def ingest_worker(self, directory, formats, name_job, filename, user):
     min_tokens = 150
     max_tokens = 1250
     full_path = directory + '/' + user + '/' + name_job
-    # check if API_URL env variable is set
-    if not os.environ.get('API_URL'):
-        url = 'http://localhost:5001/api/download'
-    else:
-        url = os.environ.get('API_URL') + '/api/download'
+    url = os.environ.get('API_URL') + '/api/download'
     print('current download url is: ' + url)
     file_data = {'name': name_job, 'file': filename, 'user': user}
     response = requests.get(url, params=file_data)
@@ -87,21 +83,14 @@ def ingest_worker(self, directory, formats, name_job, filename, user):
 
     # get files from outputs/inputs/index.faiss and outputs/inputs/index.pkl
     # and send them to the server (provide user and name in form)
-    if not os.environ.get('API_URL'):
-        url = 'http://localhost:5001/api/upload_index'
-    else:
-        url = os.environ.get('API_URL') + '/api/upload_index'
+    url = os.environ.get('API_URL') + '/api/upload_index'
     file_data = {'name': name_job, 'user': user}
     with open(full_path + '/index.faiss', 'rb') as file_faiss, open(full_path + '/index.pkl', 'rb') as file_pkl:
         files = {'file_faiss': file_faiss, 'file_pkl': file_pkl}
         response = requests.post(url, files=files, data=file_data)
 
 
-    #deletes remote
-    if not os.environ.get('API_URL'):
-        url = 'http://localhost:5001/api/delete_old?path=' + 'inputs/' + user + '/' + name_job
-    else:
-        url = os.environ.get('API_URL') + '/api/delete_old?path=' + 'inputs/' + user + '/' + name_job
+    url = os.environ.get('API_URL') + '/api/delete_old?path=' + 'inputs/' + user + '/' + name_job
     response = requests.get(url)
     # delete local
     shutil.rmtree(full_path)

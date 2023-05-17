@@ -7,35 +7,37 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const apiHost = import.meta.env.VITE_API_HOST || 'https://docsapi.arc53.com';
 
-  const handleSubmit = (e: { preventDefault: () => void }) => {
-    e.preventDefault();
+  // This codes will not used in the final version.
+  // const handleSubmit = (e: { preventDefault: () => void }) => {
+  //   e.preventDefault();
 
-    const data = {
-      username: username,
-      password: password,
-    };
+  //   const data = {
+  //     username: username,
+  //     password: password,
+  //   };
 
-    fetch('http://localhost:5001/api/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-      mode: 'cors',
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.status === 'ok') {
-          navigate('/query');
-        } else {
-          setError('Invalid username or password');
-        }
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-      });
-  };
+  //   fetch( apiHost + '/api/login', {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     },
+  //     body: JSON.stringify(data),
+  //     mode: 'cors',
+  //   })
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //       if (data.status === 'ok') {
+  //         navigate('/query');
+  //       } else {
+  //         setError('Invalid username or password');
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       console.error('Error:', error);
+  //     });
+  //};
 
   return (
     <>
