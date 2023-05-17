@@ -1,7 +1,10 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import './App.css';
 
 export default function DocWindow(props: { html: string }) {
+
+  const [html, setHtml] = useState<string>('');
+
   if (props.html === '') {
     return (
       <div className="docWindows">
@@ -19,26 +22,34 @@ export default function DocWindow(props: { html: string }) {
       </div>
     );
   } else {
-    useEffect(() => {
+  
       const anchors = document.querySelectorAll('.AnsFromDocument a');
       anchors.forEach((anchor) => {
-        console.log(anchor.getAttribute('href'));
+        anchor.addEventListener('click', (event) => {
+          event.preventDefault();
+          fetch('http://localhost:5001/api/get_docs', {
+
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              user: 'local',
+              path: 'ditatest_CHECKPLEASE.zip/' + anchor.getAttribute('href'),
+            }),
+          })
+            .then(async (response) => {
+              return response.text();
+            })
+            .then((data) => {
+              setHtml(data);
+            })
+            .catch((error) => {
+              console.log('Error: ', error);
+            });          
+        });
       });
-
-      return () => {
-        <div
-          className="AnsFromDocument"
-          dangerouslySetInnerHTML={{ __html: props.html }}
-        />;
-      };
-    });
   }
-
-  const handleAnchorClick = (event: MouseEvent) => {
-    event.preventDefault(); 
-
-    console.log('Not implemented yet');
-  };
 
   return (
     <>
