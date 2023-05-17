@@ -55,19 +55,12 @@ export default function Login() {
                         <h4 className="loginTitle mb-8 mt-10 font-semibold">
                           Welcome to Document Genius!
                         </h4>
-                        <p className="text-md mb-10">
-                          Document Genius is an interactive chatbot designed to
-                          help you navigate documents with ease. Document Genius
-                          is designed to help you find the information you need.
-                          With Document Genius, you can easily and efficiently
-                          search through documents find the sections that
-                          contain relevant information. No more reading through
-                          pages upon pages of unnecessary information. With
-                          Document Genius, what you need is a few short queries
-                          away.
-                          <br></br>
-                          Click the &quot;Sign Up&quot; button below to get
-                          started!
+                        <p className="mb-10 text-sm">
+                          Document Genius is designed to help you navigate
+                          technical documentation with ease. You can quickly
+                          find the information you need using our interactive
+                          chatbot and a few short queries. Log in or sign up
+                          below to get started!
                         </p>
                       </div>
                       <div id="loginForm" className="loginForm">
