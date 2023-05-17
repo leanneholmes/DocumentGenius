@@ -716,4 +716,4 @@ def after_request(response):
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=process.env.VITE_PORT)
+    app.run(debug=True, port=os.getenv("PORT"))
