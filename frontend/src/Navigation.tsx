@@ -101,7 +101,7 @@ export default function Navigation({
 
   useEffect(() => {
     if (uploadModalState === 'INACTIVE') {
-      updateNavigation(indexData, setIndexState);
+      // console.log('INACTIVE');
     }
   }, [uploadModalState]);
 
@@ -152,10 +152,11 @@ export default function Navigation({
           </div>
           <p className="ml-6 mt-3 font-bold text-jet">Chat History</p>
         </div>
+
         <div className="chatNavigation-lower flex flex-col-reverse border-b-2">
           <div className="relative my-4 flex gap-2 px-2">
             <div
-              className="flex h-12 w-full cursor-pointer justify-between rounded-md border-2 bg-white"
+              className="mb-3 flex h-12 w-full cursor-pointer justify-between rounded-md border-2 bg-white"
               onClick={() => setIsDocsListOpen(!isDocsListOpen)}
             >
               {selectedDocs && (
@@ -180,6 +181,7 @@ export default function Navigation({
                         <div
                           key={index}
                           onClick={() => {
+                            updateNavigation(indexData, setIndexState);
                             dispatch(setSelectedDocs(doc));
                             setIsDocsListOpen(false);
                           }}
@@ -212,7 +214,7 @@ export default function Navigation({
               </div>
             )}
           </div>
-          <p className="ml-6 mt-3 font-bold text-jet">Source Docs</p>
+          <p className="mb-2font-bold ml-6 mt-3 text-jet">Source Docs</p>
         </div>
         <div className="chatNavigation-links mt-3">
           <div
@@ -223,14 +225,6 @@ export default function Navigation({
               <FaCloudUploadAlt color="#727272" size={20} />
             </div>
             <div className="my-auto text-eerie-black">Upload</div>
-          </div>
-        </div>
-        <div className="chatNavigation-links-lower mt-3">
-          <div className="mx-3 my-auto flex h-10 cursor-pointer gap-4 rounded-md hover:bg-gray-200">
-            <div className="ml-2 mt-2.5 w-5">
-              <BsFillChatRightTextFill color="#727272" size={18} />
-            </div>
-            <div className="my-auto text-eerie-black">New Chat</div>
           </div>
         </div>
       </div>
