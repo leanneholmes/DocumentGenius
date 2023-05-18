@@ -14,6 +14,7 @@ export const handleClick = (
   if (path.startsWith('/')) {
     path = path.slice(1);
   }
+  console.log('new path ', path);
   fetch('http://localhost:5001/api/get_docs', {
     method: 'POST',
     headers: {

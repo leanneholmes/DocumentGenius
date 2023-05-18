@@ -493,53 +493,53 @@ def serve_index():
             "navigation_links": [
                 {
                     "text": "Garage Tasks",
-                    "url": "tasks/garagetaskoverview.html",
+                    "url": "ditawithdirectory.zip/tasks/garagetaskoverview.html",
                     "sub_links": [
                         {
                             "text": "Changing the oil in your car",
-                            "url": "tasks/changingtheoil.html"
+                            "url": "ditawithdirectory.zip/tasks/changingtheoil.html"
                         },
                         {
                             "text": "Organizing the workbench and tools",
-                            "url": "tasks/organizing.html"
+                            "url": "ditawithdirectory.zip/tasks/organizing.html"
                         },
                         {
                             "text": "Shovelling snow",
-                            "url": "tasks/shovellingsnow.html"
+                            "url": "ditawithdirectory.zip/tasks/shovellingsnow.html"
                         },
                         {
                             "text": "Spray painting",
-                            "url": "tasks/spraypainting.html"
+                            "url": "ditawithdirectory.zip/tasks/spraypainting.html"
                         },
                         {
                             "text": "Taking out the garbage",
-                            "url": "tasks/takinggarbage.html"
+                            "url": "ditawithdirectory.zip/tasks/takinggarbage.html"
                         },
                         {
                             "text": "Washing the car",
-                            "url": "tasks/washingthecar.html"
+                            "url": "ditawithdirectory.zip/tasks/washingthecar.html"
                         }
                     ]
                 },
                 {
                     "text": "Garage Concepts",
-                    "url": "concepts/garageconceptsoverview.html",
+                    "url": "ditawithdirectory.zip/concepts/garageconceptsoverview.html",
                     "sub_links": [
                         {
                             "text": "Lawnmower",
-                            "url": "concepts/lawnmower.html"
+                            "url": "ditawithdirectory.zip/concepts/lawnmower.html"
                         },
                         {
                             "text": "Oil",
-                            "url": "concepts/oil.html"
+                            "url": "ditawithdirectory.zip/concepts/oil.html"
                         },
                         {
                             "text": "Paint",
-                            "url": "concepts/paint.html"
+                            "url": "ditawithdirectory.zip/concepts/paint.html"
                         },
                         {
                             "text": "Shelving",
-                            "url": "concepts/shelving.html"
+                            "url": "ditawithdirectory.zip/concepts/shelving.html"
                         },
                         {
                             "text": "Snow shovel",
@@ -547,27 +547,27 @@ def serve_index():
                         },
                         {
                             "text": "Tool box",
-                            "url": "concepts/toolbox.html"
+                            "url": "ditawithdirectory.zip/concepts/toolbox.html"
                         },
                         {
                             "text": "Tools",
-                            "url": "concepts/tools.html"
+                            "url": "ditawithdirectory.zip/concepts/tools.html"
                         },
                         {
                             "text": "Water hose",
-                            "url": "concepts/waterhose.html"
+                            "url": "ditawithdirectory.zip/concepts/waterhose.html"
                         },
                         {
                             "text": "Wheel barrow",
-                            "url": "concepts/wheelbarrow.html"
+                            "url": "ditawithdirectory.zip/concepts/wheelbarrow.html"
                         },
                         {
                             "text": "Workbench",
-                            "url": "concepts/workbench.html"
+                            "url": "ditawithdirectory.zip/concepts/workbench.html"
                         },
                         {
                             "text": "Windshield washer fluid",
-                            "url": "concepts/wwfluid.html"
+                            "url": "ditawithdirectory.zip/concepts/wwfluid.html"
                         }
                     ]
                 }
@@ -717,3 +717,4 @@ def after_request(response):
 
 if __name__ == "__main__":
     app.run(debug=True, port=os.getenv("PORT"))
+
