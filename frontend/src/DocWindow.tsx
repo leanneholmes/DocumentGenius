@@ -1,11 +1,33 @@
 import { useEffect, useState } from 'react';
 import './App.css';
+import { handleClick } from './helper/getDocsHelper';
 
-export default function DocWindow(props: { html: string }) {
 
-  const [html, setHtml] = useState<string>('');
+
+export default function DocWindow(props: { html: string, onLinkClicked: (data: string) => void; }) {
+
+  useEffect(() => {
+    // const anchors = endMessageRef?.current?.querySelectorAll('a');
+
+    console.log('THE HTML IS CHANGED.');
+
+    if ( props.html !== '') {
+    const anchors = document.querySelectorAll('.AnsFromDocument a');
+    anchors?.forEach((anchor) => {
+      console.log('ANCHOR URL:' + anchor.getAttribute('href'));
+      anchor.addEventListener('click', (event) => {
+        event.preventDefault();
+      
+        
+        const mouseEvent = event as MouseEvent;
+        handleClick(mouseEvent, props.onLinkClicked);
+      });
+      });
+    }
+  }, [props.html]);
 
   if (props.html === '') {
+    
     return (
       <div className="docWindows">
         <h1>This AI doesn't make up answers.</h1>
@@ -21,35 +43,7 @@ export default function DocWindow(props: { html: string }) {
         </p>
       </div>
     );
-  } else {
-  
-      const anchors = document.querySelectorAll('.AnsFromDocument a');
-      anchors.forEach((anchor) => {
-        anchor.addEventListener('click', (event) => {
-          event.preventDefault();
-          fetch('http://localhost:5001/api/get_docs', {
-
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              user: 'local',
-              path: 'ditatest_CHECKPLEASE.zip/' + anchor.getAttribute('href'),
-            }),
-          })
-            .then(async (response) => {
-              return response.text();
-            })
-            .then((data) => {
-              setHtml(data);
-            })
-            .catch((error) => {
-              console.log('Error: ', error);
-            });          
-        });
-      });
-  }
+  } 
 
   return (
     <>
