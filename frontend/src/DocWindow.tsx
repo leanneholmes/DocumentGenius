@@ -1,20 +1,19 @@
 import { useEffect, useState } from 'react';
 import './App.css';
 import { handleClick } from './helper/getDocsHelper';
-
+import { on } from 'events';
 
 
 export default function DocWindow(props: { html: string, onLinkClicked: (data: string) => void; }) {
 
   useEffect(() => {
-    // const anchors = endMessageRef?.current?.querySelectorAll('a');
-
-    console.log('THE HTML IS CHANGED.');
-
     if ( props.html !== '') {
     const anchors = document.querySelectorAll('.AnsFromDocument a');
     anchors?.forEach((anchor) => {
-      console.log('ANCHOR URL:' + anchor.getAttribute('href'));
+      const tempURL = anchor.getAttribute('href');
+      const URL = tempURL?.replace("../", "");
+      anchor.setAttribute('href', "ditawithdirectory.zip/"+ URL as string);
+
       anchor.addEventListener('click', (event) => {
         event.preventDefault();
       
