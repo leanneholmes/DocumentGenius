@@ -68,3 +68,30 @@
 .AnsFromDocument .topicref {
   margin-bottom: 5px;
 }
+
+.AnsFromDocument ol {
+  margin-left: 3rem;
+  margin-bottom: 2rem;
+}
+.AnsFromDocument .li.stepsection {
+  margin-left: 2rem;
+  margin-bottom: 1rem;
+}
+
+.AnsFromDocument a {
+  font-weight: bold;
+  color: #4B0082; /* 밝은 진보라색 */
+  text-decoration: none; /* 밑줄 제거 */
+}
+
+.AnsFromDocument a:hover {
+  color: #8A2BE2;
+}
+
+.AnsFromDocument a:visited {
+  color: gray;
+}
+
+.AnsFromDocument ul {
+  list-style-type: ' - ';
+}
