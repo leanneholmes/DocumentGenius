@@ -19,7 +19,6 @@ import Upload from './upload/Upload';
 import { Doc } from './preferences/preferenceApi';
 import { FaCloudUploadAlt } from 'react-icons/fa';
 import { UserButton, useUser } from '@clerk/clerk-react';
-import { BsFillChatRightTextFill } from 'react-icons/bs';
 import { updateNavigation } from './helper/getDocsHelper';
 export default function Navigation({
   navState,
