@@ -1,12 +1,13 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import './App.css';
 import { handleClick } from './helper/getDocsHelper';
-import { on } from 'events';
 import { selectSelectedDocs } from './preferences/preferenceSlice';
 
-
-export default function DocWindow(props: { html: string, onLinkClicked: (data: string) => void; }) {
+export default function DocWindow(props: {
+  html: string;
+  onLinkClicked: (data: string) => void;
+}) {
   const docs = useSelector(selectSelectedDocs);
 
   useEffect(() => {
@@ -14,9 +15,9 @@ export default function DocWindow(props: { html: string, onLinkClicked: (data: s
       const anchors = document.querySelectorAll('.AnsFromDocument a');
       anchors?.forEach((anchor) => {
         const tempURL = anchor.getAttribute('href');
-        const URL = tempURL?.replace("../", "");
+        const URL = tempURL?.replace('../', '');
         const activeFilename = docs?.description;
-        const path = activeFilename as string + '/' + URL as string;
+        const path = ((activeFilename as string) + '/' + URL) as string;
         anchor.setAttribute('href', path as string);
 
         anchor.addEventListener('click', (event) => {
@@ -30,14 +31,13 @@ export default function DocWindow(props: { html: string, onLinkClicked: (data: s
   }, [props.html]);
 
   if (props.html === '') {
-
     return (
       <div className="docWindows">
-        <h1>This AI doesn't make up answers.</h1>
+        <h1>This AI doesn&apos;t make up answers.</h1>
 
         <p>
-          This is where we show you the documents you've uploaded that we base
-          our answers on.
+          This is where we show you the documents you&apos;ve uploaded that we
+          base our answers on.
         </p>
 
         <p>

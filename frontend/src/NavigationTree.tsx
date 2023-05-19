@@ -21,9 +21,25 @@ interface NavigationTreeProps {
 const NavigationTree: FC<NavigationTreeProps> = ({ data, onLinkClicked }) => {
   const renderLinks = (links: LinkType[]) => (
     <ul>
-      <details>
-        {links.map((link, i) => (
-          <li key={i}>
+      {links.map((link, i) => (
+        <li key={i}>
+          {link.sub_links && link.sub_links.length > 0 ? (
+            <details>
+              <summary>
+                {' '}
+                <a
+                  href={link.url}
+                  onClick={(e) => {
+                    handleClick(e.nativeEvent, onLinkClicked);
+                  }}
+                >
+                  {link.text}
+                </a>
+              </summary>
+
+              {renderLinks(link.sub_links)}
+            </details>
+          ) : (
             <a
               href={link.url}
               onClick={(e) => {
@@ -32,13 +48,11 @@ const NavigationTree: FC<NavigationTreeProps> = ({ data, onLinkClicked }) => {
             >
               {link.text}
             </a>
-            {link.sub_links && renderLinks(link.sub_links)}
-          </li>
-        ))}
-      </details>
+          )}
+        </li>
+      ))}
     </ul>
   );
-  const setIndex = (index: string) => {};
   return (
     <div className="navTree-container">
       {data.map((item, index) => (
