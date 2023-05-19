@@ -1,10 +1,6 @@
 import React, { FC } from 'react';
-import TreeView from '@mui/lab/TreeView';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import TreeItem from '@mui/lab/TreeItem';
 import { handleClick } from './helper/getDocsHelper';
-import { MouseEvent } from 'react';
+import './docnavigation.css';
 
 type LinkType = {
   url: string;
@@ -25,29 +21,32 @@ interface NavigationTreeProps {
 const NavigationTree: FC<NavigationTreeProps> = ({ data, onLinkClicked }) => {
   const renderLinks = (links: LinkType[]) => (
     <ul>
-      {links.map((link, i) => (
-        <li key={i}>
-          <a
-            href={link.url}
-            onClick={(e) => {
-              console.log('event target from navtree ', e);
-              handleClick(e.nativeEvent, onLinkClicked);
-              // onLinkClicked(link.text);
-            }}
-          >
-            {link.text}
-          </a>
-          {link.sub_links && renderLinks(link.sub_links)}
-        </li>
-      ))}
+      <details>
+        {links.map((link, i) => (
+          <li key={i}>
+            <a
+              href={link.url}
+              onClick={(e) => {
+                handleClick(e.nativeEvent, onLinkClicked);
+              }}
+            >
+              {link.text}
+            </a>
+            {link.sub_links && renderLinks(link.sub_links)}
+          </li>
+        ))}
+      </details>
     </ul>
   );
+  const setIndex = (index: string) => {};
   return (
-    <div>
+    <div className="navTree-container">
       {data.map((item, index) => (
         <div key={index}>
-          <h2>{item.title}</h2>
-          {renderLinks(item.navigation_links)}
+          <details>
+            <summary>{item.title}</summary>
+            {renderLinks(item.navigation_links)}
+          </details>
         </div>
       ))}
     </div>
