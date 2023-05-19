@@ -15,7 +15,7 @@ export const handleClick = (
     path = path.slice(1);
   }
   console.log('new path ', path);
-  fetch('http://localhost:5001/api/get_docs', {
+  fetch(import.meta.env.VITE_API_HOST + '/api/get_docs', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -41,7 +41,7 @@ export const updateNavigation = (
   indexData: { user: string },
   setIndexState: (arg0: string) => void,
 ) => {
-  fetch('http://localhost:5001/api/get_index', {
+  fetch(import.meta.env.VITE_API_HOST + '/api/get_index', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
