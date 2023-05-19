@@ -48,7 +48,7 @@
 }
 
 .AnsFromDocument h1 {
-  color: #9b59b6; 
+  color: #9b59b6;
   font-size: 32px;
   font-weight: bold;
   text-align: center;
@@ -81,7 +81,7 @@
 .AnsFromDocument a {
   font-weight: bold;
   color: #4b0082;
-  text-decoration: none; 
+  text-decoration: none;
 }
 
 .AnsFromDocument a:hover {
