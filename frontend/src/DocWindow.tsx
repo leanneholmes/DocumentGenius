@@ -1,18 +1,24 @@
 import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import './App.css';
 import { handleClick } from './helper/getDocsHelper';
+import { selectSelectedDocs } from './preferences/preferenceSlice';
 
 export default function DocWindow(props: {
   html: string;
   onLinkClicked: (data: string) => void;
 }) {
+  const docs = useSelector(selectSelectedDocs);
+
   useEffect(() => {
     if (props.html !== '') {
       const anchors = document.querySelectorAll('.AnsFromDocument a');
       anchors?.forEach((anchor) => {
         const tempURL = anchor.getAttribute('href');
         const URL = tempURL?.replace('../', '');
-        anchor.setAttribute('href', ('ditawithdirectory.zip/' + URL) as string);
+        const activeFilename = docs?.description;
+        const path = ((activeFilename as string) + '/' + URL) as string;
+        anchor.setAttribute('href', path as string);
 
         anchor.addEventListener('click', (event) => {
           event.preventDefault();
