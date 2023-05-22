@@ -24,8 +24,7 @@ export default function QueryPage() {
           <DocNavigation index={index} onLinkClicked={handleHtmlChange} />
         </div>
         <div className="docWindow">
-          <DocWindow html={html} onLinkClicked={handleHtmlChange}/>
-
+          <DocWindow html={html} onLinkClicked={handleHtmlChange} />
         </div>
         <div className="chatWindow">
           <Conversation onLinkClicked={handleHtmlChange} />

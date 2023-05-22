@@ -48,7 +48,7 @@
 }
 
 .AnsFromDocument h1 {
-  color: #9b59b6; /* 텍스트 색상 (보라색) */
+  color: #9b59b6;
   font-size: 32px;
   font-weight: bold;
   text-align: center;
@@ -80,12 +80,12 @@
 
 .AnsFromDocument a {
   font-weight: bold;
-  color: #4B0082; /* 밝은 진보라색 */
-  text-decoration: none; /* 밑줄 제거 */
+  color: #4b0082;
+  text-decoration: none;
 }
 
 .AnsFromDocument a:hover {
-  color: #8A2BE2;
+  color: #8a2be2;
 }
 
 .AnsFromDocument a:visited {

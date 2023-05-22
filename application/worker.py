@@ -19,9 +19,10 @@ try:
     nltk.download('averaged_perceptron_tagger', quiet=True)
 except FileExistsError:
     pass
+
+
 def generate_random_string(length):
     return ''.join([string.ascii_letters[i % 52] for i in range(length)])
-
 
 
 def ingest_worker(self, directory, formats, name_job, filename, user):
@@ -50,13 +51,12 @@ def ingest_worker(self, directory, formats, name_job, filename, user):
     with open(full_path + '/' + filename, 'wb') as f:
         f.write(file)
 
-    #check if file is .zip and extract it
+    # check if file is .zip and extract it
     if filename.endswith('.zip'):
         with zipfile.ZipFile(full_path + '/' + filename, 'r') as zip_ref:
             zip_ref.extractall(full_path)
-            zip_ref.extractall('inputs' + '/' + user + '/' + name_job) 
+            zip_ref.extractall('inputs' + '/' + user + '/' + name_job)
         os.remove(full_path + '/' + filename)
-
 
     import time
     self.update_state(state='PROGRESS', meta={'current': 1})
@@ -70,10 +70,10 @@ def ingest_worker(self, directory, formats, name_job, filename, user):
 
     from langchain.document_loaders import DirectoryLoader
     from langchain.document_loaders import BSHTMLLoader
-    loader = DirectoryLoader(full_path, glob="**/*.html", loader_cls=BSHTMLLoader)
+    loader = DirectoryLoader(full_path, glob="**/*.html",
+                             loader_cls=BSHTMLLoader, silent_errors=True)
     docs = loader.load()
 
-    print(docs)
     call_openai_api(docs, full_path, self)
     self.update_state(state='PROGRESS', meta={'current': 100})
 
@@ -89,8 +89,8 @@ def ingest_worker(self, directory, formats, name_job, filename, user):
         files = {'file_faiss': file_faiss, 'file_pkl': file_pkl}
         response = requests.post(url, files=files, data=file_data)
 
-
-    url = os.environ.get('API_URL') + '/api/delete_old?path=' + 'inputs/' + user + '/' + name_job
+    url = os.environ.get('API_URL') + '/api/delete_old?path=' + \
+        'inputs/' + user + '/' + name_job
     response = requests.get(url)
     # delete local
     shutil.rmtree(full_path)
