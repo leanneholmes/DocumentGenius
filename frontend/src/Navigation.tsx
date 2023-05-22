@@ -94,17 +94,20 @@ export default function Navigation({
     });
   }, []);
 
-  const indexData = {
-    user: 'local',
-  };
+  const { isLoaded, isSignedIn, user } = useUser();
+  useEffect(() => {
+    const indexData = {
+      user: 'local',
+      activedoc: selectedDocs?.description,
+    };
+    updateNavigation(indexData, setIndexState);
+  }, [selectedDocs]);
 
   useEffect(() => {
     if (uploadModalState === 'INACTIVE') {
       // console.log('INACTIVE');
     }
   }, [uploadModalState]);
-
-  const { isLoaded, isSignedIn, user } = useUser();
 
   if (!isLoaded || !isSignedIn) {
     return null;
@@ -180,7 +183,6 @@ export default function Navigation({
                         <div
                           key={index}
                           onClick={() => {
-                            updateNavigation(indexData, setIndexState);
                             dispatch(setSelectedDocs(doc));
                             setIsDocsListOpen(false);
                           }}

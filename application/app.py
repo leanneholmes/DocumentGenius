@@ -28,6 +28,7 @@ from langchain.prompts.chat import (
 )
 from pymongo import MongoClient
 from werkzeug.utils import secure_filename
+from bs4 import BeautifulSoup
 
 from error import bad_request
 from worker import ingest_worker
@@ -289,24 +290,6 @@ def api_answer():
                                vectorstore=docsearch, k=3)
             result = chain({"query": question})
 
-        print(result)
-
-        # some formatting for the frontend
-        # if "result" in result:
-        #     result['answer'] = result['result']
-        # result['answer'] = result['answer'].replace("\\n", "\n")
-        # try:
-        #     result['answer'] = result['answer'].split("SOURCES:")[0]
-        # except:
-        #     pass
-
-        # mock result
-        # result = {
-        #     "answer": "The answer is 42",
-        #     "sources": ["https://en.wikipedia.org/wiki/42_(number)", "https://en.wikipedia.org/wiki/42_(number)"]
-        # }
-
-        print('test')
         sources = []
         if result['source_documents']:
             print(result['source_documents'])
@@ -419,12 +402,6 @@ def combined_json():
             "location": "local"
         })
 
-    data_remote = requests.get(
-        "https://d3dg1063dc54p9.cloudfront.net/combined.json").json()
-    for index in data_remote:
-        index['location'] = "remote"
-        data.append(index)
-
     return jsonify(data)
 
 
@@ -486,98 +463,58 @@ def serve_html():
 
 @app.route('/api/get_index', methods=['POST'])
 def serve_index():
-    user = secure_filename(request.json['user'])
-    data = [
-        {
-            "title": "Working in the garage",
-            "navigation_links": [
-                {
-                    "text": "Garage Tasks",
-                    "url": "ditawithdirectory.zip/tasks/garagetaskoverview.html",
-                    "sub_links": [
-                        {
-                            "text": "Changing the oil in your car",
-                            "url": "ditawithdirectory.zip/tasks/changingtheoil.html"
-                        },
-                        {
-                            "text": "Organizing the workbench and tools",
-                            "url": "ditawithdirectory.zip/tasks/organizing.html"
-                        },
-                        {
-                            "text": "Shovelling snow",
-                            "url": "ditawithdirectory.zip/tasks/shovellingsnow.html"
-                        },
-                        {
-                            "text": "Spray painting",
-                            "url": "ditawithdirectory.zip/tasks/spraypainting.html"
-                        },
-                        {
-                            "text": "Taking out the garbage",
-                            "url": "ditawithdirectory.zip/tasks/takinggarbage.html"
-                        },
-                        {
-                            "text": "Washing the car",
-                            "url": "ditawithdirectory.zip/tasks/washingthecar.html"
-                        }
-                    ]
-                },
-                {
-                    "text": "Garage Concepts",
-                    "url": "ditawithdirectory.zip/concepts/garageconceptsoverview.html",
-                    "sub_links": [
-                        {
-                            "text": "Lawnmower",
-                            "url": "ditawithdirectory.zip/concepts/lawnmower.html"
-                        },
-                        {
-                            "text": "Oil",
-                            "url": "ditawithdirectory.zip/concepts/oil.html"
-                        },
-                        {
-                            "text": "Paint",
-                            "url": "ditawithdirectory.zip/concepts/paint.html"
-                        },
-                        {
-                            "text": "Shelving",
-                            "url": "ditawithdirectory.zip/concepts/shelving.html"
-                        },
-                        {
-                            "text": "Snow shovel",
-                            "url": "concepts/snowshovel.html"
-                        },
-                        {
-                            "text": "Tool box",
-                            "url": "ditawithdirectory.zip/concepts/toolbox.html"
-                        },
-                        {
-                            "text": "Tools",
-                            "url": "ditawithdirectory.zip/concepts/tools.html"
-                        },
-                        {
-                            "text": "Water hose",
-                            "url": "ditawithdirectory.zip/concepts/waterhose.html"
-                        },
-                        {
-                            "text": "Wheel barrow",
-                            "url": "ditawithdirectory.zip/concepts/wheelbarrow.html"
-                        },
-                        {
-                            "text": "Workbench",
-                            "url": "ditawithdirectory.zip/concepts/workbench.html"
-                        },
-                        {
-                            "text": "Windshield washer fluid",
-                            "url": "ditawithdirectory.zip/concepts/wwfluid.html"
-                        }
-                    ]
-                }
-            ]
+    userid = request.json.get('user')
+    activedoc = request.json.get('activedoc')
+
+    # Construct the path to the index file
+    folder_path = os.path.join(UPLOAD_FOLDER, userid, activedoc)
+
+    # Read the index.html file
+    index_file_path = os.path.join(folder_path, 'index.html')
+    with open(index_file_path, 'r') as file:
+        html_content = file.read()
+
+    # Parse the HTML using BeautifulSoup
+    soup = BeautifulSoup(html_content, 'lxml')
+
+    # Find the title from the first h1 tag
+    title = soup.find('h1').text.strip()
+
+    # Find the top-level <ul> element
+    top_ul_element = soup.find('nav').find('ul')
+
+    navigation_data = []
+    navigation_data.append({
+        'title': title,
+        'navigation_links': extract_navigation_links(top_ul_element, activedoc)
+    })
+
+    return jsonify(navigation_data)
+
+
+def extract_navigation_links(ul_element, activedoc):
+    navigation_links = []
+
+    # Find all the <li> elements within the <ul>
+    li_elements = ul_element.find_all(
+        'li', recursive=False) if ul_element else []
+
+    for li in li_elements:
+        link_element = li.find('a')
+
+        url = os.path.join(activedoc, link_element["href"])
+        # Replace backslashes with forward slashes
+        url = url.replace("\\", "/")
+
+        navigation_link = {
+            'text': link_element.text,
+            'url': url,
+            'sub_links': extract_navigation_links(li.find('ul'), activedoc)
         }
 
-    ]
+        navigation_links.append(navigation_link)
 
-    json_data = json.dumps(data)
-    return json_data
+    return navigation_links
 
 
 @app.route('/api/register', methods=['POST'])
@@ -648,15 +585,35 @@ def upload_index_files():
     file_faiss.save(os.path.join(save_dir, 'index.faiss'))
     file_pkl.save(os.path.join(save_dir, 'index.pkl'))
     # create entry in vectors_collection
-    vectors_collection.insert_one({
-        "user": user,
-        "name": job_name,
-        "language": job_name,
-        "location": save_dir,
-        "date": datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S"),
-        "model": embeddings_choice,
-        "type": "local"
-    })
+    # Check if a document with the same filename exists
+    existing_document = vectors_collection.find_one(
+        {"user": user, "name": job_name})
+
+    # Update or insert the document based on the existing_document variable
+    if existing_document:
+        vectors_collection.replace_one(
+            {"_id": existing_document["_id"]},
+            {
+                "user": user,
+                "name": job_name,
+                "language": job_name,
+                "location": save_dir,
+                "date": datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S"),
+                "model": embeddings_choice,
+                "type": "local"
+            }
+        )
+    else:
+        vectors_collection.insert_one({
+            "user": user,
+            "name": job_name,
+            "language": job_name,
+            "location": save_dir,
+            "date": datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S"),
+            "model": embeddings_choice,
+            "type": "local"
+        })
+
     return {"status": 'ok'}
 
 
@@ -717,4 +674,3 @@ def after_request(response):
 
 if __name__ == "__main__":
     app.run(debug=True, port=os.getenv("PORT"))
-

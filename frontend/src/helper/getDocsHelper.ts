@@ -38,7 +38,7 @@ export const handleClick = (
 };
 
 export const updateNavigation = (
-  indexData: { user: string },
+  indexData: { user: string; activedoc: string | undefined },
   setIndexState: (arg0: string) => void,
 ) => {
   fetch(import.meta.env.VITE_API_HOST + '/api/get_index', {
