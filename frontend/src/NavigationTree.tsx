@@ -36,7 +36,6 @@ const NavigationTree: FC<NavigationTreeProps> = ({ data, onLinkClicked }) => {
                   {link.text}
                 </a>
               </summary>
-
               {renderLinks(link.sub_links)}
             </details>
           ) : (

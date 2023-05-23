@@ -20,13 +20,15 @@ export default function App() {
   );
 
   return (
-    <ClerkProvider publishableKey={clerkPubKey}>
-      <SignedIn>
-        <QueryPage />
-      </SignedIn>
-      <SignedOut>
-        <Login />
-      </SignedOut>
-    </ClerkProvider>
+    <div className="app">
+      <ClerkProvider publishableKey={clerkPubKey}>
+        <SignedIn>
+          <QueryPage />
+        </SignedIn>
+        <SignedOut>
+          <Login />
+        </SignedOut>
+      </ClerkProvider>
+    </div>
   );
 }
