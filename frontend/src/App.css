@@ -96,3 +96,12 @@
   list-style-type: ' - ';
   margin-left: 2rem;
 }
+
+.AnsFromDocument table {
+  margin-left: 2rem;
+}
+
+.AnsFromDocument pre {
+  margin-left: 2rem;
+}
+
