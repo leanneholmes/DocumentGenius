@@ -52,7 +52,7 @@ if llm_choice == "manifest":
 
     manifest = Manifest(
         client_name="huggingface",
-        client_connection="http://127.0.0.1:5000"
+        client_connection= os.getenv("API_URL")
     )
 
 # Redirect PosixPath to WindowsPath on Windows
