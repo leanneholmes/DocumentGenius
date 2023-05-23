@@ -20,8 +20,8 @@ document.getElementById("message-form").addEventListener("submit", function(even
       localStorage.setItem("conversation_state", conversation_state);
     }
 
-    // send post request to server os.getenv("API_KEY") with message in json body
-    fetch( os.getenv("API_KEY") + '/api/answer', {
+    // send post request to server http://127.0.0.1:5000/ with message in json body
+    fetch( import.meta.env.VITE_API_HOST + '/api/answer', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
