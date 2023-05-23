@@ -6,7 +6,6 @@ import { ReactComponent as Dislike } from './../assets/dislike.svg';
 import ReactMarkdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/cjs/styles/prism';
-import '../conversation.css';
 
 const ConversationBubble = forwardRef<
   HTMLDivElement,
