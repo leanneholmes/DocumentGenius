@@ -48,7 +48,7 @@
 }
 
 .AnsFromDocument {
-  margin-left: 1em;
+  margin: 2em;
 }
 
 .AnsFromDocument h1 {
@@ -107,9 +107,9 @@
 }
 
 .AnsFromDocument .relconcepts {
-  margin-top: 0.8em;
+  margin-top: 0.5em;
 }
 
-.AnsFromDocument {
-  margin-right: 1em;
+.AnsFromDocument .reltasks {
+  margin-top: 0.5em;
 }
