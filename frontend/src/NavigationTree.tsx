@@ -40,6 +40,7 @@ const NavigationTree: FC<NavigationTreeProps> = ({ data, onLinkClicked }) => {
             </details>
           ) : (
             <a
+              className="nested"
               href={link.url}
               onClick={(e) => {
                 handleClick(e.nativeEvent, onLinkClicked);

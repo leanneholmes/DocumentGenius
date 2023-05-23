@@ -47,22 +47,23 @@
   margin-right: 2rem;
 }
 
+.AnsFromDocument {
+  margin-left: 1em;
+}
+
 .AnsFromDocument h1 {
-  color: #9b59b6;
-  font-size: 32px;
-  font-weight: bold;
-  text-align: center;
-  text-transform: uppercase;
+  color: #1d365d;
+  font-size: 2em;
+  font-weight: 600;
 }
 
 .AnsFromDocument p {
-  margin-left: 2rem;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5em;
 }
 
 .AnsFromDocument nav {
-  margin-left: 2rem;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5em;
+  line-height: 1.3em;
 }
 
 .AnsFromDocument .topicref {
@@ -70,38 +71,45 @@
 }
 
 .AnsFromDocument ol {
-  margin-left: 3rem;
-  margin-bottom: 2rem;
+  margin-left: 1em;
+  margin-bottom: 0.5em;
 }
 .AnsFromDocument .li.stepsection {
-  margin-left: 2rem;
+  margin-left: 1em;
   margin-bottom: 1rem;
 }
 
 .AnsFromDocument a {
-  font-weight: bold;
-  color: #4b0082;
+  color: #3563ab;
+  font-weight: 500;
   text-decoration: none;
 }
 
 .AnsFromDocument a:hover {
-  color: #8a2be2;
+  text-decoration: underline;
 }
 
 .AnsFromDocument a:visited {
-  color: gray;
+  color: #9063ab;
 }
 
 .AnsFromDocument ul {
   list-style-type: ' - ';
-  margin-left: 2rem;
+  margin-left: 1em;
 }
 
 .AnsFromDocument table {
-  margin-left: 2rem;
+  margin-left: 1em;
 }
 
 .AnsFromDocument pre {
-  margin-left: 2rem;
+  margin-left: 1em;
 }
 
+.AnsFromDocument .relconcepts {
+  margin-top: 0.8em;
+}
+
+.AnsFromDocument {
+  margin-right: 1em;
+}

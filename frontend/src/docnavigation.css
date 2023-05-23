@@ -26,6 +26,10 @@ details[open] > summary::before {
   margin-right: 0.2em;
 }
 
-a:hover {
+.navTree-container a:hover {
   background-color: #f5f5f5;
+}
+
+.nested {
+  margin-left: 1em;
 }
