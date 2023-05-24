@@ -1,7 +1,7 @@
 import NavigationTree from './NavigationTree';
 export default function DocNavigation(props: {
   index: string;
-  onLinkClicked: (data: string) => void;
+  onSourceDocLinkClicked: (data: string) => void;
 }) {
   if (props.index === '') {
     return <div></div>;
@@ -14,7 +14,7 @@ export default function DocNavigation(props: {
     <>
       <NavigationTree
         data={parseData}
-        onLinkClicked={props.onLinkClicked}
+        onSourceDocLinkClicked={props.onSourceDocLinkClicked}
       ></NavigationTree>
     </>
   );
