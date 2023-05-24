@@ -15,10 +15,13 @@ type DataType = {
 
 interface NavigationTreeProps {
   data: DataType[];
-  onLinkClicked: (data: string) => void;
+  onSourceDocLinkClicked: (data: string) => void;
 }
 
-const NavigationTree: FC<NavigationTreeProps> = ({ data, onLinkClicked }) => {
+const NavigationTree: FC<NavigationTreeProps> = ({
+  data,
+  onSourceDocLinkClicked,
+}) => {
   const renderLinks = (links: LinkType[]) => (
     <ul>
       {links.map((link, i) => (
@@ -30,7 +33,7 @@ const NavigationTree: FC<NavigationTreeProps> = ({ data, onLinkClicked }) => {
                 <a
                   href={link.url}
                   onClick={(e) => {
-                    handleClick(e.nativeEvent, onLinkClicked);
+                    handleClick(e.nativeEvent, onSourceDocLinkClicked);
                   }}
                 >
                   {link.text}
@@ -43,7 +46,7 @@ const NavigationTree: FC<NavigationTreeProps> = ({ data, onLinkClicked }) => {
             <a
               href={link.url}
               onClick={(e) => {
-                handleClick(e.nativeEvent, onLinkClicked);
+                handleClick(e.nativeEvent, onSourceDocLinkClicked);
               }}
             >
               {link.text}

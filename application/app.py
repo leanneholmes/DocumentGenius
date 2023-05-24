@@ -127,12 +127,9 @@ def run_async_chain(chain, question, chat_history):
 def extract_metadata(metadata):
     result = {}
     path, filename = os.path.split(metadata['source'])
-    print('after split')
-    print(path)
     # Remove the first two path elements
     new_path = os.path.join(*path.split(os.path.sep)[2:])
     new_path = os.path.join(new_path, filename)
-    print(new_path)
     # Add the metadata to the result list
     result['source'] = new_path
     result['title'] = metadata['title']
@@ -292,12 +289,9 @@ def api_answer():
 
         sources = []
         if result['source_documents']:
-            print(result['source_documents'])
             for doc in result['source_documents']:
                 metadata = extract_metadata(doc.metadata)
                 sources.append(metadata)
-                print('metadata')
-                print(metadata)
             return jsonify(
                 answer=result['answer'],
                 sources=sources,
@@ -356,17 +350,18 @@ def api_feedback():
     print("Answer: " + answer)
     print("Feedback: " + feedback)
     print('-' * 5)
-    response = requests.post(
-        url="https://86x89umx77.execute-api.eu-west-2.amazonaws.com/docsgpt-feedback",
-        headers={
-            "Content-Type": "application/json; charset=utf-8",
-        },
-        data=json.dumps({
-            "answer": answer,
-            "question": question,
-            "feedback": feedback
-        })
-    )
+    # replace the url with your own feedback api
+    # response = requests.post(
+    #     url="https://86x89umx77.execute-api.eu-west-2.amazonaws.com/docsgpt-feedback",
+    #     headers={
+    #         "Content-Type": "application/json; charset=utf-8",
+    #     },
+    #     data=json.dumps({
+    #         "answer": answer,
+    #         "question": question,
+    #         "feedback": feedback
+    #     })
+    # )
     return {"status": 'ok'}
 
 
@@ -452,44 +447,50 @@ def serve_html():
     user = secure_filename(request.json['user'])
     rawPath = os.path.normpath(request.json['path'])
     path, filename = os.path.split(rawPath)
-    print(user)
-    print(app.config['UPLOAD_FOLDER'])
-    print(path)
-    print(filename)
     save_dir = os.path.join(app.config['UPLOAD_FOLDER'], user, path)
-    print(save_dir)
     return send_from_directory(save_dir, filename)
 
 
 @app.route('/api/get_index', methods=['POST'])
 def serve_index():
-    userid = request.json.get('user')
-    activedoc = request.json.get('activedoc')
+    try:
+        # Validate the request fields
+        userid = request.json.get('user')
+        activedoc = request.json.get('activedoc')
 
-    # Construct the path to the index file
-    folder_path = os.path.join(UPLOAD_FOLDER, userid, activedoc)
+        if not userid or not activedoc:
+            error_message = 'Missing user or activedoc field in the request.'
+            return jsonify({'error': error_message}), 400
 
-    # Read the index.html file
-    index_file_path = os.path.join(folder_path, 'index.html')
-    with open(index_file_path, 'r') as file:
-        html_content = file.read()
+        # Construct the path to the index file
+        folder_path = os.path.join(UPLOAD_FOLDER, userid, activedoc)
 
-    # Parse the HTML using BeautifulSoup
-    soup = BeautifulSoup(html_content, 'lxml')
+        # Read the index.html file
+        index_file_path = os.path.join(folder_path, 'index.html')
+        with open(index_file_path, 'r') as file:
+            html_content = file.read()
 
-    # Find the title from the first h1 tag
-    title = soup.find('h1').text.strip()
+        # Parse the HTML using BeautifulSoup
+        soup = BeautifulSoup(html_content, 'lxml')
 
-    # Find the top-level <ul> element
-    top_ul_element = soup.find('nav').find('ul')
+        # Find the title from the first h1 tag
+        title = soup.find('h1').text.strip()
 
-    navigation_data = []
-    navigation_data.append({
-        'title': title,
-        'navigation_links': extract_navigation_links(top_ul_element, activedoc)
-    })
+        # Find the top-level <ul> element
+        top_ul_element = soup.find('nav').find('ul')
 
-    return jsonify(navigation_data)
+        navigation_data = []
+        navigation_data.append({
+            'title': title,
+            'navigation_links': extract_navigation_links(top_ul_element, activedoc)
+        })
+
+        return jsonify(navigation_data)
+
+    except Exception as e:
+        # Handle the exception and return an error response
+        error_message = str(e)
+        return jsonify({'error': error_message}), 500
 
 
 def extract_navigation_links(ul_element, activedoc):
@@ -515,35 +516,6 @@ def extract_navigation_links(ul_element, activedoc):
         navigation_links.append(navigation_link)
 
     return navigation_links
-
-
-@app.route('/api/register', methods=['POST'])
-def register():
-    username = request.json['username']
-    password = request.json['password']
-
-    user = users.find_one({'username': username})
-
-    if user:
-        return {'status': 'user already exists'}
-    else:
-        user = users.insert_one({'username': username, 'password': password})
-
-    return {'status': 'ok'}
-
-
-@app.route('/api/login', methods=['POST'])
-def login():
-    username = request.json['username']
-    password = request.json['password']
-    user = users.find_one({'username': username})
-    print(user)
-    if not user:
-        return {"status": 'no user name'}
-    if password != user['password']:
-        return {'status': 'password incorrect'}
-
-    return {'status': 'ok'}
 
 
 @app.route('/api/task_status', methods=['GET'])
@@ -647,20 +619,9 @@ def delete_old():
         pass
     return {"status": 'ok'}
 
-
-# This code will be deleted after the test.
-@app.route('/api/getdoctest', methods=['get'])
-def sendhtml():
-    print("hello")
-    print("Current working directory: ", {os.getcwd()})
-
-    filename = 'test.html'
-    directory = os.path.join(app.root_path, 'inputs/local/temp/')
-
-    return send_from_directory(directory, filename)
-
-
 # handling CORS
+
+
 @app.after_request
 def after_request(response):
     response.headers.add('Access-Control-Allow-Origin', '*')

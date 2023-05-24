@@ -16,7 +16,7 @@ import { sendFeedback } from './conversationApi';
 import { IoSend } from 'react-icons/io5';
 import { handleClick } from '../helper/getDocsHelper';
 interface ConversationProps {
-  onLinkClicked: (data: string) => void;
+  onSourceDocLinkClicked: (data: string) => void;
 }
 
 export default function Conversation(props: ConversationProps) {
@@ -37,7 +37,7 @@ export default function Conversation(props: ConversationProps) {
     if (anchors) {
       anchors.forEach((anchor) => {
         anchor.addEventListener('click', (event) => {
-          handleClick(event, props.onLinkClicked);
+          handleClick(event, props.onSourceDocLinkClicked);
         });
       });
     }
@@ -46,7 +46,7 @@ export default function Conversation(props: ConversationProps) {
       if (anchors) {
         anchors.forEach((anchor) => {
           anchor.removeEventListener('click', (event) => {
-            handleClick(event, props.onLinkClicked);
+            handleClick(event, props.onSourceDocLinkClicked);
           });
         });
       }

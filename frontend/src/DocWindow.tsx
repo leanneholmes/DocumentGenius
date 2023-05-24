@@ -6,7 +6,7 @@ import { selectSelectedDocs } from './preferences/preferenceSlice';
 
 export default function DocWindow(props: {
   html: string;
-  onLinkClicked: (data: string) => void;
+  onSourceDocLinkClicked: (data: string) => void;
 }) {
   const docs = useSelector(selectSelectedDocs);
 
@@ -24,7 +24,7 @@ export default function DocWindow(props: {
           event.preventDefault();
 
           const mouseEvent = event as MouseEvent;
-          handleClick(mouseEvent, props.onLinkClicked);
+          handleClick(mouseEvent, props.onSourceDocLinkClicked);
         });
       });
     }
