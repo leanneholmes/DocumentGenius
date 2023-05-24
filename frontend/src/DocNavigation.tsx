@@ -8,7 +8,6 @@ export default function DocNavigation(props: {
   }
 
   const parseData = JSON.parse(props.index);
-  console.log(parseData);
 
   return (
     <>

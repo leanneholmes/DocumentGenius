@@ -15,10 +15,11 @@ import { FEEDBACK, Query } from './conversationModels';
 import { sendFeedback } from './conversationApi';
 import { IoSend } from 'react-icons/io5';
 import { handleClick } from '../helper/getDocsHelper';
+import { useUser } from '@clerk/clerk-react';
+import '../conversation.css';
 interface ConversationProps {
   onSourceDocLinkClicked: (data: string) => void;
 }
-import '../conversation.css';
 
 export default function Conversation(props: ConversationProps) {
   const queries = useSelector(selectQueries);
@@ -26,6 +27,7 @@ export default function Conversation(props: ConversationProps) {
   const dispatch = useDispatch<AppDispatch>();
   const endMessageRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLDivElement>(null);
+  const { isSignedIn, user } = useUser();
 
   useEffect(
     () => endMessageRef?.current?.scrollIntoView({ behavior: 'smooth' }),
@@ -35,19 +37,19 @@ export default function Conversation(props: ConversationProps) {
   useEffect(() => {
     const anchors = endMessageRef?.current?.querySelectorAll('a');
 
-    if (anchors) {
+    if (anchors && isSignedIn) {
       anchors.forEach((anchor) => {
         anchor.addEventListener('click', (event) => {
-          handleClick(event, props.onSourceDocLinkClicked);
+          handleClick(event, props.onSourceDocLinkClicked, user.id);
         });
       });
     }
 
     return () => {
-      if (anchors) {
+      if (anchors && isSignedIn) {
         anchors.forEach((anchor) => {
           anchor.removeEventListener('click', (event) => {
-            handleClick(event, props.onSourceDocLinkClicked);
+            handleClick(event, props.onSourceDocLinkClicked, user.id);
           });
         });
       }

@@ -10,7 +10,7 @@ import datetime
 from gridfs import GridFS
 from celery import Celery
 from celery.result import AsyncResult
-from flask import Flask, request, redirect, send_from_directory, jsonify
+from flask import Flask, request, redirect, send_from_directory, jsonify, abort
 from langchain import FAISS
 from langchain import VectorDBQA, HuggingFaceHub, Cohere, OpenAI
 from langchain.chains import LLMChain, ConversationalRetrievalChain
@@ -52,7 +52,7 @@ if llm_choice == "manifest":
 
     manifest = Manifest(
         client_name="huggingface",
-        client_connection= os.getenv("API_URL")
+        client_connection=os.getenv("API_URL")
     )
 
 # Redirect PosixPath to WindowsPath on Windows
@@ -134,6 +134,26 @@ def extract_metadata(metadata):
     result['source'] = new_path
     result['title'] = metadata['title']
     return result
+
+
+def validate_user_id(func):
+    def wrapper(*args, **kwargs):
+        user_id = request.headers.get('User')
+
+        # If user ID not found in headers, check the request body
+        if not user_id:
+            data = request.get_json()
+            user_id = data.get('user') if data else None
+
+        # Add your userid here, would be better to store in a file
+        allowed_user_ids = [
+            'user_2QFYcNmazHpLbbJqcF93k41nyWz', 'user2', 'user3']
+        if user_id not in allowed_user_ids:
+            abort(404)  # Return 404 for invalid user ID
+
+        return func(*args, **kwargs)
+
+    return wrapper
 
 
 @celery.task(bind=True, name="app.ingest")
@@ -367,7 +387,7 @@ def api_feedback():
 
 @app.route('/api/combine', methods=['GET'])
 def combined_json():
-    user = 'local'
+    user = request.headers.get('User')
     """Provide json file with combined available indexes."""
     # get json from https://d3dg1063dc54p9.cloudfront.net/combined.json
 
@@ -452,6 +472,7 @@ def serve_html():
 
 
 @app.route('/api/get_index', methods=['POST'])
+@validate_user_id
 def serve_index():
     try:
         # Validate the request fields
@@ -626,7 +647,7 @@ def delete_old():
 def after_request(response):
     response.headers.add('Access-Control-Allow-Origin', '*')
     response.headers.add('Access-Control-Allow-Headers',
-                         'Content-Type,Authorization,Access-Control-Allow-Origin,Access-Control-Allow-Methods,Access-Control-Allow-Credentials')
+                         'Content-Type,Authorization,Access-Control-Allow-Origin,Access-Control-Allow-Methods,Access-Control-Allow-Credentials, User')
     response.headers.add('Access-Control-Allow-Methods',
                          'GET,PUT,POST,DELETE,OPTIONS')
     response.headers.add('Access-Control-Allow-Credentials', 'true')

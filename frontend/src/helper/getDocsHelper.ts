@@ -5,6 +5,7 @@ export const handleClick = (
     (data: string): void;
     (arg0: string): void;
   },
+  userid: string,
 ) => {
   event.preventDefault();
   const anchor = event.target as HTMLAnchorElement;
@@ -21,7 +22,7 @@ export const handleClick = (
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      user: 'local',
+      user: userid,
       path: path,
     }),
   })

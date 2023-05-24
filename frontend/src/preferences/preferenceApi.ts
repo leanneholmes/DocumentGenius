@@ -15,9 +15,14 @@ export type Doc = {
 export async function getDocs(): Promise<Doc[] | null> {
   try {
     const apiHost =
-      import.meta.env.VITE_API_HOST || 'https://docsapi.arc53.com';
+      import.meta.env.VITE_API_HOST || 'https://docsapi.arc53.com'; // This needs to be change to your hosted backend url
 
-    const response = await fetch(apiHost + '/api/combine');
+    const headers = new Headers();
+    headers.append('User', 'local');
+
+    const response = await fetch(apiHost + '/api/combine', {
+      headers: headers,
+    });
     const data = await response.json();
 
     const docs: Doc[] = [];

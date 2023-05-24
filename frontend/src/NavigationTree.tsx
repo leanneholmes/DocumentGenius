@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
 import { handleClick } from './helper/getDocsHelper';
+import { useUser } from '@clerk/clerk-react';
 import './docnavigation.css';
 
 type LinkType = {
@@ -22,6 +23,7 @@ const NavigationTree: FC<NavigationTreeProps> = ({
   data,
   onSourceDocLinkClicked,
 }) => {
+  const { isSignedIn, user } = useUser();
   const renderLinks = (links: LinkType[]) => (
     <ul>
       {links.map((link, i) => (
@@ -33,7 +35,13 @@ const NavigationTree: FC<NavigationTreeProps> = ({
                 <a
                   href={link.url}
                   onClick={(e) => {
-                    handleClick(e.nativeEvent, onSourceDocLinkClicked);
+                    if (isSignedIn) {
+                      handleClick(
+                        e.nativeEvent,
+                        onSourceDocLinkClicked,
+                        user.id,
+                      );
+                    }
                   }}
                 >
                   {link.text}
@@ -46,7 +54,9 @@ const NavigationTree: FC<NavigationTreeProps> = ({
               className="nested"
               href={link.url}
               onClick={(e) => {
-                handleClick(e.nativeEvent, onSourceDocLinkClicked);
+                if (isSignedIn) {
+                  handleClick(e.nativeEvent, onSourceDocLinkClicked, user.id);
+                }
               }}
             >
               {link.text}

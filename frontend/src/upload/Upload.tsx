@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux';
 import { ActiveState } from '../models/misc';
 import { getDocs } from '../preferences/preferenceApi';
 import { setSourceDocs } from '../preferences/preferenceSlice';
+import { useUser } from '@clerk/clerk-react';
 
 export default function Upload({
   modalState,
@@ -128,13 +129,13 @@ export default function Upload({
 
   const doNothing = () => undefined;
 
-  const uploadFile = () => {
+  const uploadFile = (userid: string) => {
     const formData = new FormData();
     files.forEach((file) => {
       formData.append('file', file);
     });
     formData.append('name', docName);
-    formData.append('user', 'local');
+    formData.append('user', userid);
     const apiHost = import.meta.env.VITE_API_HOST;
     const xhr = new XMLHttpRequest();
     xhr.upload.addEventListener('progress', (event) => {
@@ -166,11 +167,12 @@ export default function Upload({
   });
 
   let view;
+  const { isSignedIn, user } = useUser();
   if (progress?.type === 'UPLOAD') {
     view = <UploadProgress></UploadProgress>;
   } else if (progress?.type === 'TRAINIING') {
     view = <TrainingProgress></TrainingProgress>;
-  } else {
+  } else if (isSignedIn) {
     view = (
       <>
         <p className="text-xl text-jet">Upload New Documentation</p>
@@ -203,7 +205,9 @@ export default function Upload({
         </div>
         <div className="flex flex-row-reverse">
           <button
-            onClick={uploadFile}
+            onClick={() => {
+              uploadFile(user.id);
+            }}
             className="ml-6 rounded-md bg-blue-3000 px-6 py-2 text-white"
           >
             Train

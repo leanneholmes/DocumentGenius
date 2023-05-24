@@ -20,6 +20,7 @@ import { Doc } from './preferences/preferenceApi';
 import { FaCloudUploadAlt } from 'react-icons/fa';
 import { UserButton, useUser } from '@clerk/clerk-react';
 import { updateNavigation } from './helper/getDocsHelper';
+
 export default function Navigation({
   navState,
   setNavState,
@@ -97,18 +98,14 @@ export default function Navigation({
   const { isLoaded, isSignedIn, user } = useUser();
   console.log(user?.id);
   useEffect(() => {
-    const indexData = {
-      user: 'local',
-      activedoc: selectedDocs?.description,
-    };
-    updateNavigation(indexData, setIndexState);
-  }, [selectedDocs]);
-
-  useEffect(() => {
-    if (uploadModalState === 'INACTIVE') {
-      // console.log('INACTIVE');
+    if (user?.id) {
+      const indexData = {
+        user: user.id,
+        activedoc: selectedDocs?.description,
+      };
+      updateNavigation(indexData, setIndexState);
     }
-  }, [uploadModalState]);
+  }, [selectedDocs]);
 
   if (!isLoaded || !isSignedIn) {
     return null;

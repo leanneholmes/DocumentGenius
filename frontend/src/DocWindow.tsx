@@ -1,17 +1,20 @@
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import './App.css';
 import { handleClick } from './helper/getDocsHelper';
 import { selectSelectedDocs } from './preferences/preferenceSlice';
+import { useUser } from '@clerk/clerk-react';
+
+import './App.css';
 
 export default function DocWindow(props: {
   html: string;
   onSourceDocLinkClicked: (data: string) => void;
 }) {
   const docs = useSelector(selectSelectedDocs);
+  const { isSignedIn, user } = useUser();
 
   useEffect(() => {
-    if (props.html !== '') {
+    if (props.html !== '' && isSignedIn) {
       const anchors = document.querySelectorAll('.AnsFromDocument a');
       anchors?.forEach((anchor) => {
         const tempURL = anchor.getAttribute('href');
@@ -24,7 +27,7 @@ export default function DocWindow(props: {
           event.preventDefault();
 
           const mouseEvent = event as MouseEvent;
-          handleClick(mouseEvent, props.onSourceDocLinkClicked);
+          handleClick(mouseEvent, props.onSourceDocLinkClicked, user.id);
         });
       });
     }
