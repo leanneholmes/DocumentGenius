@@ -18,6 +18,7 @@ import { handleClick } from '../helper/getDocsHelper';
 interface ConversationProps {
   onLinkClicked: (data: string) => void;
 }
+import '../conversation.css';
 
 export default function Conversation(props: ConversationProps) {
   const queries = useSelector(selectQueries);
