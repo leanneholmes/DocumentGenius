@@ -95,6 +95,7 @@ export default function Navigation({
   }, []);
 
   const { isLoaded, isSignedIn, user } = useUser();
+  console.log(user?.id);
   useEffect(() => {
     const indexData = {
       user: 'local',
