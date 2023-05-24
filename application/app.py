@@ -146,7 +146,7 @@ def ingest(self, directory, formats, name_job, filename, user):
 
 @app.route("/")
 def home():
-    return redirect("/static/index.html", code=302)
+    return send_from_directory("static/", "index.html")
 
 
 @app.route('/assets/<path:path>')
