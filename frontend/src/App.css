@@ -47,24 +47,115 @@
   margin-right: 2rem;
 }
 
+.AnsFromDocument {
+  margin: 2em;
+}
+
 .AnsFromDocument h1 {
-  color: #9b59b6; /* 텍스트 색상 (보라색) */
-  font-size: 32px;
-  font-weight: bold;
-  text-align: center;
-  text-transform: uppercase;
+  color: #1d365d;
+  font-size: 2em;
+  font-weight: 600;
 }
 
 .AnsFromDocument p {
-  margin-left: 2rem;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5em;
 }
 
 .AnsFromDocument nav {
-  margin-left: 2rem;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5em;
+  line-height: 1.3em;
 }
 
 .AnsFromDocument .topicref {
   margin-bottom: 5px;
+}
+
+.AnsFromDocument ol {
+  margin-left: 1em;
+  margin-bottom: 0.5em;
+}
+.AnsFromDocument .li.stepsection {
+  margin-left: 1em;
+  margin-bottom: 1rem;
+}
+
+.AnsFromDocument a {
+  color: #3563ab;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.AnsFromDocument a:hover {
+  text-decoration: underline;
+}
+
+.AnsFromDocument a:visited {
+  color: #9063ab;
+}
+
+.AnsFromDocument ul {
+  list-style-type: ' - ';
+  margin-left: 1em;
+}
+
+.AnsFromDocument table {
+  margin-left: 1em;
+}
+
+.AnsFromDocument pre {
+  margin-left: 1em;
+}
+
+.AnsFromDocument .relconcepts {
+  margin-top: 0.5em;
+}
+
+.AnsFromDocument .reltasks {
+  margin-top: 0.5em;
+}
+
+.AnsFromDocument h2 {
+  margin-bottom: 0.5em;
+  font-size: 1.3em;
+}
+
+.AnsFromDocument .grey-stack {
+  background-color: #f6f6f6;
+}
+
+.smaller {
+  font-size: 0.85em;
+  color: grey;
+}
+
+.question-details {
+  margin-top: 1em;
+}
+
+.tags-wrapper {
+  margin-top: 1.3em;
+}
+
+.stack-tag {
+  display: inline-block;
+  background-color: #e1ecf4;
+  color: #608fb1;
+  font-size: 0.8em;
+  padding: 0.3em;
+  border-radius: 5px;
+  margin-left: 0.2em;
+  margin-right: 0.2em;
+}
+
+.stack-answer {
+  margin-top: 1.3em;
+}
+
+.answer-details {
+  margin-top: 1em;
+}
+
+.mock-hyperlink {
+  color: #0074d6;
+  text-decoration: underline;
 }

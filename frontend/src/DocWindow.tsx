@@ -1,44 +1,52 @@
 import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import './App.css';
+import { handleClick } from './helper/getDocsHelper';
+import { selectSelectedDocs } from './preferences/preferenceSlice';
 
-export default function DocWindow(props: { html: string }) {
+export default function DocWindow(props: {
+  html: string;
+  onSourceDocLinkClicked: (data: string) => void;
+}) {
+  const docs = useSelector(selectSelectedDocs);
+
+  useEffect(() => {
+    if (props.html !== '') {
+      const anchors = document.querySelectorAll('.AnsFromDocument a');
+      anchors?.forEach((anchor) => {
+        const tempURL = anchor.getAttribute('href');
+        const URL = tempURL?.replace('../', '');
+        const activeFilename = docs?.description;
+        const path = ((activeFilename as string) + '/' + URL) as string;
+        anchor.setAttribute('href', path as string);
+
+        anchor.addEventListener('click', (event) => {
+          event.preventDefault();
+
+          const mouseEvent = event as MouseEvent;
+          handleClick(mouseEvent, props.onSourceDocLinkClicked);
+        });
+      });
+    }
+  }, [props.html]);
+
   if (props.html === '') {
     return (
       <div className="docWindows">
-        <h1>This AI doesn't make up answers.</h1>
+        {/* <h1>This AI doesn&apos;t make up answers.</h1>
 
         <p>
-          This is where we show you the documents you've uploaded that we base
-          our answers on.
+          This is where we show you the documents you&apos;ve uploaded that we
+          base our answers on.
         </p>
 
         <p>
           Our goal is to make you more efficient without having to validate the
           answers you receive from the AI.
-        </p>
+        </p> */}
       </div>
     );
-  } else {
-    useEffect(() => {
-      const anchors = document.querySelectorAll('.AnsFromDocument a');
-      anchors.forEach((anchor) => {
-        console.log(anchor.getAttribute('href'));
-      });
-
-      return () => {
-        <div
-          className="AnsFromDocument"
-          dangerouslySetInnerHTML={{ __html: props.html }}
-        />;
-      };
-    });
   }
-
-  const handleAnchorClick = (event: MouseEvent) => {
-    event.preventDefault(); 
-
-    console.log('Not implemented yet');
-  };
 
   return (
     <>

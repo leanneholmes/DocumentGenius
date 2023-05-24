@@ -28,6 +28,7 @@ from langchain.prompts.chat import (
 )
 from pymongo import MongoClient
 from werkzeug.utils import secure_filename
+from bs4 import BeautifulSoup
 
 from error import bad_request
 from worker import ingest_worker
@@ -51,7 +52,7 @@ if llm_choice == "manifest":
 
     manifest = Manifest(
         client_name="huggingface",
-        client_connection="http://127.0.0.1:5000"
+        client_connection= os.getenv("API_URL")
     )
 
 # Redirect PosixPath to WindowsPath on Windows
@@ -126,12 +127,9 @@ def run_async_chain(chain, question, chat_history):
 def extract_metadata(metadata):
     result = {}
     path, filename = os.path.split(metadata['source'])
-    print('after split')
-    print(path)
     # Remove the first two path elements
     new_path = os.path.join(*path.split(os.path.sep)[2:])
     new_path = os.path.join(new_path, filename)
-    print(new_path)
     # Add the metadata to the result list
     result['source'] = new_path
     result['title'] = metadata['title']
@@ -157,31 +155,31 @@ def send_asset(path):
 @app.route("/api/answer", methods=["POST"])
 def api_answer():
     # Sample data, use it for testing
-    data = {
-        "answer": "To change the oil in your car, follow these steps:\n\n1. Remove the old oil filter.\n2. Drain the old oil.\n3. Install a new oil filter and gasket.\n4. Add new oil to the engine.\n\nHere's a breakdown of each step:\n\n1. Locate the oil filter and use an oil filter wrench to remove it. Be sure to have a basin or container beneath the filter to catch any oil that may spill out.\n\n2. Locate the drain plug on the oil pan beneath your car. Place a container large enough to hold all of the old oil beneath the drain plug. Remove the drain plug and let the oil drain completely.\n\n3. Install a new oil filter using the recommended torque specifications. Be sure to use a new gasket as well.\n\n4. Add new oil to the engine using a funnel and the specified amount of oil recommended by the manufacturer. Double check the oil level with the dipstick.\n\nRemember to consult your car's owner's manual for specific instructions and recommendations, including the type of oil to use. Also, keep in mind that motor oil should be changed every 6000 kilometers.",
-        "sources": [
-            {
-                "source": "ditawithdirectory.zip\\tasks\\changingtheoil.html",
-                "title": "Changing the oil in your car"
-            },
-            {
-                "source": "ditawithdirectory.zip\\tasks\\changingtheoil.html",
-                "title": "Changing the oil in your car"
-            },
-            {
-                "source": "ditawithdirectory.zip\\concepts\\oil.html",
-                "title": "Oil"
-            },
-            {
-                "source": "ditawithdirectory.zip\\concepts\\oil.html",
-                "title": "Oil"
-            }
-        ]
-    }
+    # data = {
+    #     "answer": "To change the oil in your car, follow these steps:\n\n1. Remove the old oil filter.\n2. Drain the old oil.\n3. Install a new oil filter and gasket.\n4. Add new oil to the engine.\n\nHere's a breakdown of each step:\n\n1. Locate the oil filter and use an oil filter wrench to remove it. Be sure to have a basin or container beneath the filter to catch any oil that may spill out.\n\n2. Locate the drain plug on the oil pan beneath your car. Place a container large enough to hold all of the old oil beneath the drain plug. Remove the drain plug and let the oil drain completely.\n\n3. Install a new oil filter using the recommended torque specifications. Be sure to use a new gasket as well.\n\n4. Add new oil to the engine using a funnel and the specified amount of oil recommended by the manufacturer. Double check the oil level with the dipstick.\n\nRemember to consult your car's owner's manual for specific instructions and recommendations, including the type of oil to use. Also, keep in mind that motor oil should be changed every 6000 kilometers.",
+    #     "sources": [
+    #         {
+    #             "source": "ditawithdirectory.zip\\tasks\\changingtheoil.html",
+    #             "title": "Changing the oil in your car"
+    #         },
+    #         {
+    #             "source": "ditawithdirectory.zip\\tasks\\changingtheoil.html",
+    #             "title": "Changing the oil in your car"
+    #         },
+    #         {
+    #             "source": "ditawithdirectory.zip\\concepts\\oil.html",
+    #             "title": "Oil"
+    #         },
+    #         {
+    #             "source": "ditawithdirectory.zip\\concepts\\oil.html",
+    #             "title": "Oil"
+    #         }
+    #     ]
+    # }
 
-    json_data = json.dumps(data)
+    # json_data = json.dumps(data)
 
-    return (json_data)
+    # return (json_data)
     data = request.get_json()
     question = data["question"]
     history = data["history"]
@@ -289,32 +287,11 @@ def api_answer():
                                vectorstore=docsearch, k=3)
             result = chain({"query": question})
 
-        print(result)
-
-        # some formatting for the frontend
-        # if "result" in result:
-        #     result['answer'] = result['result']
-        # result['answer'] = result['answer'].replace("\\n", "\n")
-        # try:
-        #     result['answer'] = result['answer'].split("SOURCES:")[0]
-        # except:
-        #     pass
-
-        # mock result
-        # result = {
-        #     "answer": "The answer is 42",
-        #     "sources": ["https://en.wikipedia.org/wiki/42_(number)", "https://en.wikipedia.org/wiki/42_(number)"]
-        # }
-
-        print('test')
         sources = []
         if result['source_documents']:
-            print(result['source_documents'])
             for doc in result['source_documents']:
                 metadata = extract_metadata(doc.metadata)
                 sources.append(metadata)
-                print('metadata')
-                print(metadata)
             return jsonify(
                 answer=result['answer'],
                 sources=sources,
@@ -373,17 +350,18 @@ def api_feedback():
     print("Answer: " + answer)
     print("Feedback: " + feedback)
     print('-' * 5)
-    response = requests.post(
-        url="https://86x89umx77.execute-api.eu-west-2.amazonaws.com/docsgpt-feedback",
-        headers={
-            "Content-Type": "application/json; charset=utf-8",
-        },
-        data=json.dumps({
-            "answer": answer,
-            "question": question,
-            "feedback": feedback
-        })
-    )
+    # replace the url with your own feedback api
+    # response = requests.post(
+    #     url="https://86x89umx77.execute-api.eu-west-2.amazonaws.com/docsgpt-feedback",
+    #     headers={
+    #         "Content-Type": "application/json; charset=utf-8",
+    #     },
+    #     data=json.dumps({
+    #         "answer": answer,
+    #         "question": question,
+    #         "feedback": feedback
+    #     })
+    # )
     return {"status": 'ok'}
 
 
@@ -418,12 +396,6 @@ def combined_json():
             "model": embeddings_choice,
             "location": "local"
         })
-
-    data_remote = requests.get(
-        "https://d3dg1063dc54p9.cloudfront.net/combined.json").json()
-    for index in data_remote:
-        index['location'] = "remote"
-        data.append(index)
 
     return jsonify(data)
 
@@ -475,138 +447,75 @@ def serve_html():
     user = secure_filename(request.json['user'])
     rawPath = os.path.normpath(request.json['path'])
     path, filename = os.path.split(rawPath)
-    print(user)
-    print(app.config['UPLOAD_FOLDER'])
-    print(path)
-    print(filename)
     save_dir = os.path.join(app.config['UPLOAD_FOLDER'], user, path)
-    print(save_dir)
     return send_from_directory(save_dir, filename)
 
 
 @app.route('/api/get_index', methods=['POST'])
 def serve_index():
-    user = secure_filename(request.json['user'])
-    data = [
-        {
-            "title": "Working in the garage",
-            "navigation_links": [
-                {
-                    "text": "Garage Tasks",
-                    "url": "tasks/garagetaskoverview.html",
-                    "sub_links": [
-                        {
-                            "text": "Changing the oil in your car",
-                            "url": "tasks/changingtheoil.html"
-                        },
-                        {
-                            "text": "Organizing the workbench and tools",
-                            "url": "tasks/organizing.html"
-                        },
-                        {
-                            "text": "Shovelling snow",
-                            "url": "tasks/shovellingsnow.html"
-                        },
-                        {
-                            "text": "Spray painting",
-                            "url": "tasks/spraypainting.html"
-                        },
-                        {
-                            "text": "Taking out the garbage",
-                            "url": "tasks/takinggarbage.html"
-                        },
-                        {
-                            "text": "Washing the car",
-                            "url": "tasks/washingthecar.html"
-                        }
-                    ]
-                },
-                {
-                    "text": "Garage Concepts",
-                    "url": "concepts/garageconceptsoverview.html",
-                    "sub_links": [
-                        {
-                            "text": "Lawnmower",
-                            "url": "concepts/lawnmower.html"
-                        },
-                        {
-                            "text": "Oil",
-                            "url": "concepts/oil.html"
-                        },
-                        {
-                            "text": "Paint",
-                            "url": "concepts/paint.html"
-                        },
-                        {
-                            "text": "Shelving",
-                            "url": "concepts/shelving.html"
-                        },
-                        {
-                            "text": "Snow shovel",
-                            "url": "concepts/snowshovel.html"
-                        },
-                        {
-                            "text": "Tool box",
-                            "url": "concepts/toolbox.html"
-                        },
-                        {
-                            "text": "Tools",
-                            "url": "concepts/tools.html"
-                        },
-                        {
-                            "text": "Water hose",
-                            "url": "concepts/waterhose.html"
-                        },
-                        {
-                            "text": "Wheel barrow",
-                            "url": "concepts/wheelbarrow.html"
-                        },
-                        {
-                            "text": "Workbench",
-                            "url": "concepts/workbench.html"
-                        },
-                        {
-                            "text": "Windshield washer fluid",
-                            "url": "concepts/wwfluid.html"
-                        }
-                    ]
-                }
-            ]
+    try:
+        # Validate the request fields
+        userid = request.json.get('user')
+        activedoc = request.json.get('activedoc')
+
+        if not userid or not activedoc:
+            error_message = 'Missing user or activedoc field in the request.'
+            return jsonify({'error': error_message}), 400
+
+        # Construct the path to the index file
+        folder_path = os.path.join(UPLOAD_FOLDER, userid, activedoc)
+
+        # Read the index.html file
+        index_file_path = os.path.join(folder_path, 'index.html')
+        with open(index_file_path, 'r') as file:
+            html_content = file.read()
+
+        # Parse the HTML using BeautifulSoup
+        soup = BeautifulSoup(html_content, 'lxml')
+
+        # Find the title from the first h1 tag
+        title = soup.find('h1').text.strip()
+
+        # Find the top-level <ul> element
+        top_ul_element = soup.find('nav').find('ul')
+
+        navigation_data = []
+        navigation_data.append({
+            'title': title,
+            'navigation_links': extract_navigation_links(top_ul_element, activedoc)
+        })
+
+        return jsonify(navigation_data)
+
+    except Exception as e:
+        # Handle the exception and return an error response
+        error_message = str(e)
+        return jsonify({'error': error_message}), 500
+
+
+def extract_navigation_links(ul_element, activedoc):
+    navigation_links = []
+
+    # Find all the <li> elements within the <ul>
+    li_elements = ul_element.find_all(
+        'li', recursive=False) if ul_element else []
+
+    for li in li_elements:
+        link_element = li.find('a')
+
+        url = os.path.join(activedoc, link_element["href"])
+        # Replace backslashes with forward slashes
+        url = url.replace("\\", "/")
+
+        navigation_link = {
+            'text': link_element.text,
+            'url': url,
+            'sub_links': extract_navigation_links(li.find('ul'), activedoc)
         }
 
-    ]
+        navigation_links.append(navigation_link)
 
-    json_data = json.dumps(data)
-    return json_data
-
-
-@app.route('/api/register', methods=['POST'])
-def register():
-    username = request.json['username']
-    password = request.json['password']
-
-    user = users.find_one({'username': username})
-
-    if user:
-        return {'status': 'user already exists'}
-    else:
-        user = users.insert_one({'username': username, 'password': password})
-
-    return {'status': 'ok'}
-
-
-@app.route('/api/login', methods=['POST'])
-def login():
-    username = request.json['username']
-    password = request.json['password']
-    user = users.find_one({'username': username})
-    print(user)
-    if not user:
-        return {"status": 'no user name'}
-    if password != user['password']:
-        return {'status': 'password incorrect'}
-
-    return {'status': 'ok'}
+    return navigation_links
 
 
 @app.route('/api/task_status', methods=['GET'])
@@ -648,15 +557,35 @@ def upload_index_files():
     file_faiss.save(os.path.join(save_dir, 'index.faiss'))
     file_pkl.save(os.path.join(save_dir, 'index.pkl'))
     # create entry in vectors_collection
-    vectors_collection.insert_one({
-        "user": user,
-        "name": job_name,
-        "language": job_name,
-        "location": save_dir,
-        "date": datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S"),
-        "model": embeddings_choice,
-        "type": "local"
-    })
+    # Check if a document with the same filename exists
+    existing_document = vectors_collection.find_one(
+        {"user": user, "name": job_name})
+
+    # Update or insert the document based on the existing_document variable
+    if existing_document:
+        vectors_collection.replace_one(
+            {"_id": existing_document["_id"]},
+            {
+                "user": user,
+                "name": job_name,
+                "language": job_name,
+                "location": save_dir,
+                "date": datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S"),
+                "model": embeddings_choice,
+                "type": "local"
+            }
+        )
+    else:
+        vectors_collection.insert_one({
+            "user": user,
+            "name": job_name,
+            "language": job_name,
+            "location": save_dir,
+            "date": datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S"),
+            "model": embeddings_choice,
+            "type": "local"
+        })
+
     return {"status": 'ok'}
 
 
@@ -690,20 +619,9 @@ def delete_old():
         pass
     return {"status": 'ok'}
 
-
-# This code will be deleted after the test.
-@app.route('/api/getdoctest', methods=['get'])
-def sendhtml():
-    print("hello")
-    print("Current working directory: ", {os.getcwd()})
-
-    filename = 'test.html'
-    directory = os.path.join(app.root_path, 'inputs/local/temp/')
-
-    return send_from_directory(directory, filename)
-
-
 # handling CORS
+
+
 @app.after_request
 def after_request(response):
     response.headers.add('Access-Control-Allow-Origin', '*')
@@ -716,4 +634,4 @@ def after_request(response):
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=process.env.VITE_PORT)
+    app.run(debug=True, port=os.getenv("PORT"))

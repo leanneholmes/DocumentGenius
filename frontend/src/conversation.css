@@ -1,3 +1,7 @@
 .link a {
-  color: blueviolet;
+  color: rgb(52, 43, 226);
+}
+
+.link a:hover {
+  text-decoration: underline;
 }

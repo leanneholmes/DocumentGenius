@@ -1,6 +1,6 @@
 export const handleClick = (
   event: MouseEvent,
-  onLinkClicked: {
+  onSourceDocLinkClicked: {
     (data: string): void;
     (data: string): void;
     (arg0: string): void;
@@ -14,7 +14,8 @@ export const handleClick = (
   if (path.startsWith('/')) {
     path = path.slice(1);
   }
-  fetch('http://localhost:5001/api/get_docs', {
+  console.log('new path ', path);
+  fetch(import.meta.env.VITE_API_HOST + '/api/get_docs', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -29,7 +30,7 @@ export const handleClick = (
     })
     .then((data) => {
       console.log(data);
-      onLinkClicked(data);
+      onSourceDocLinkClicked(data);
     })
     .catch((error) => {
       console.log('Error: ', error);
@@ -37,10 +38,21 @@ export const handleClick = (
 };
 
 export const updateNavigation = (
-  indexData: { user: string },
+  indexData: { user: string; activedoc: string | undefined },
   setIndexState: (arg0: string) => void,
 ) => {
-  fetch('http://localhost:5001/api/get_index', {
+  const { user, activedoc } = indexData;
+
+  if (
+    !user ||
+    user.trim() === '' ||
+    !activedoc ||
+    activedoc.trim() === '' ||
+    activedoc === 'default'
+  ) {
+    return;
+  }
+  fetch(import.meta.env.VITE_API_HOST + '/api/get_index', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -50,13 +62,14 @@ export const updateNavigation = (
   })
     .then((res) => {
       if (res.status === 200) {
-        console.log(res);
+        return res.json();
       }
-      return res.json();
     })
     .then((data) => {
-      const stringData = JSON.stringify(data);
-      setIndexState(stringData);
+      if (data) {
+        const stringData = JSON.stringify(data);
+        setIndexState(stringData);
+      }
     })
     .catch((error) => {
       console.error('Error:', error);

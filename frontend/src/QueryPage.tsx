@@ -20,13 +20,17 @@ export default function QueryPage() {
     <>
       <div className="wrapper">
         <div className="docNavigation">
-          <DocNavigation index={index} />
+          {/* TO DO: Change to setContentWindow or something more descriptive */}
+          <DocNavigation
+            index={index}
+            onSourceDocLinkClicked={handleHtmlChange}
+          />
         </div>
         <div className="docWindow">
-          <DocWindow html={html} />
+          <DocWindow html={html} onSourceDocLinkClicked={handleHtmlChange} />
         </div>
         <div className="chatWindow">
-          <Conversation onLinkClicked={handleHtmlChange} />
+          <Conversation onSourceDocLinkClicked={handleHtmlChange} />
         </div>
         <div className="chatNavigation">
           {' '}

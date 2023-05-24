@@ -1,4 +1,6 @@
 import React, { FC } from 'react';
+import { handleClick } from './helper/getDocsHelper';
+import './docnavigation.css';
 
 type LinkType = {
   url: string;
@@ -13,26 +15,55 @@ type DataType = {
 
 interface NavigationTreeProps {
   data: DataType[];
+  onSourceDocLinkClicked: (data: string) => void;
 }
 
-const NavigationTree: FC<NavigationTreeProps> = ({ data }) => {
+const NavigationTree: FC<NavigationTreeProps> = ({
+  data,
+  onSourceDocLinkClicked,
+}) => {
   const renderLinks = (links: LinkType[]) => (
     <ul>
       {links.map((link, i) => (
         <li key={i}>
-          <a href={link.url}>{link.text}</a>
-          {link.sub_links && renderLinks(link.sub_links)}
+          {link.sub_links && link.sub_links.length > 0 ? (
+            <details>
+              <summary>
+                {' '}
+                <a
+                  href={link.url}
+                  onClick={(e) => {
+                    handleClick(e.nativeEvent, onSourceDocLinkClicked);
+                  }}
+                >
+                  {link.text}
+                </a>
+              </summary>
+              {renderLinks(link.sub_links)}
+            </details>
+          ) : (
+            <a
+              className="nested"
+              href={link.url}
+              onClick={(e) => {
+                handleClick(e.nativeEvent, onSourceDocLinkClicked);
+              }}
+            >
+              {link.text}
+            </a>
+          )}
         </li>
       ))}
     </ul>
   );
-
   return (
-    <div>
+    <div className="navTree-container">
       {data.map((item, index) => (
         <div key={index}>
-          <h2>{item.title}</h2>
-          {renderLinks(item.navigation_links)}
+          <details>
+            <summary>{item.title}</summary>
+            {renderLinks(item.navigation_links)}
+          </details>
         </div>
       ))}
     </div>

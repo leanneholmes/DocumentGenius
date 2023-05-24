@@ -1,0 +1,35 @@
+.navTree-container {
+  padding: 1em;
+}
+
+.navTree-container li {
+  margin-left: 1em;
+}
+
+details > summary {
+  list-style-type: none;
+  outline: none;
+  cursor: pointer;
+}
+
+details > summary::-webkit-details-marker {
+  display: none;
+}
+
+details > summary::before {
+  content: url(./assets/right-chevron.png);
+  margin-right: 0.2em;
+}
+
+details[open] > summary::before {
+  content: url(./assets/down-chevron.png);
+  margin-right: 0.2em;
+}
+
+.navTree-container a:hover {
+  background-color: #f5f5f5;
+}
+
+.nested {
+  margin-left: 1em;
+}
