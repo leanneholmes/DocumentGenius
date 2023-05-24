@@ -21,7 +21,7 @@ document.getElementById("message-form").addEventListener("submit", function(even
     }
 
     // send post request to server http://127.0.0.1:5000/ with message in json body
-    fetch('http://127.0.0.1:5001/api/answer', {
+    fetch( import.meta.env.VITE_API_HOST + '/api/answer', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

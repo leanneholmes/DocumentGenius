@@ -39,11 +39,11 @@ const NavigationTree: FC<NavigationTreeProps> = ({
                   {link.text}
                 </a>
               </summary>
-
               {renderLinks(link.sub_links)}
             </details>
           ) : (
             <a
+              className="nested"
               href={link.url}
               onClick={(e) => {
                 handleClick(e.nativeEvent, onSourceDocLinkClicked);

@@ -33,7 +33,7 @@ export default function DocWindow(props: {
   if (props.html === '') {
     return (
       <div className="docWindows">
-        <h1>This AI doesn&apos;t make up answers.</h1>
+        {/* <h1>This AI doesn&apos;t make up answers.</h1>
 
         <p>
           This is where we show you the documents you&apos;ve uploaded that we
@@ -43,7 +43,7 @@ export default function DocWindow(props: {
         <p>
           Our goal is to make you more efficient without having to validate the
           answers you receive from the AI.
-        </p>
+        </p> */}
       </div>
     );
   }
