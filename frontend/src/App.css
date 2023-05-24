@@ -113,3 +113,49 @@
 .AnsFromDocument .reltasks {
   margin-top: 0.5em;
 }
+
+.AnsFromDocument h2 {
+  margin-bottom: 0.5em;
+  font-size: 1.3em;
+}
+
+.AnsFromDocument .grey-stack {
+  background-color: #f6f6f6;
+}
+
+.smaller {
+  font-size: 0.85em;
+  color: grey;
+}
+
+.question-details {
+  margin-top: 1em;
+}
+
+.tags-wrapper {
+  margin-top: 1.3em;
+}
+
+.stack-tag {
+  display: inline-block;
+  background-color: #e1ecf4;
+  color: #608fb1;
+  font-size: 0.8em;
+  padding: 0.3em;
+  border-radius: 5px;
+  margin-left: 0.2em;
+  margin-right: 0.2em;
+}
+
+.stack-answer {
+  margin-top: 1.3em;
+}
+
+.answer-details {
+  margin-top: 1em;
+}
+
+.mock-hyperlink {
+  color: #0074d6;
+  text-decoration: underline;
+}
