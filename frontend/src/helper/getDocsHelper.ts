@@ -10,12 +10,12 @@ export const handleClick = (
   event.preventDefault();
   const anchor = event.target as HTMLAnchorElement;
   const url = new URL(anchor.href.replace(/%5C/g, '/'));
-  console.log('Path:', url.pathname);
+  // console.log('Path:', url.pathname);
   let path = url.pathname;
   if (path.startsWith('/')) {
     path = path.slice(1);
   }
-  console.log('new path ', path);
+  // console.log('new path ', path);
   fetch(import.meta.env.VITE_API_HOST + '/api/get_docs', {
     method: 'POST',
     headers: {
@@ -30,7 +30,7 @@ export const handleClick = (
       return response.text();
     })
     .then((data) => {
-      console.log(data);
+      // console.log(data);
       onSourceDocLinkClicked(data);
     })
     .catch((error) => {

@@ -36,7 +36,6 @@ export default function Navigation({
 
   const [isDocsListOpen, setIsDocsListOpen] = useState(false);
   const { isLoaded, isSignedIn, user } = useUser();
-  console.log(user?.id);
 
   const isApiKeySet = useSelector(selectApiKeyStatus);
   const [apiKeyModalState, setApiKeyModalState] =
