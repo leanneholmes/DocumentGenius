@@ -145,7 +145,9 @@ def validate_user_id(func):
         # If user ID not found in headers, check the request body
         if not user_id:
             data = request.get_json()
-            user_id = data.get('user') if data else None
+            user_id = data.get('user')
+            if not data:
+                user_id = request.form['user']
 
         # Add your userid here, would be better to store in a file
         allowed_user_ids = [
@@ -381,6 +383,7 @@ def api_feedback():
 
 
 @app.route('/api/combine', methods=['GET'])
+@validate_user_id
 def combined_json():
     user = request.headers.get('User')
     """Provide json file with combined available indexes."""
@@ -457,6 +460,7 @@ def upload_file():
 
 
 @app.route('/api/get_docs', methods=['POST'])
+@validate_user_id
 def serve_html():
     print(request.json)
     user = secure_filename(request.json['user'])
@@ -545,6 +549,7 @@ def task_status():
 
 # Backgound task api
 @app.route('/api/upload_index', methods=['POST'])
+@validate_user_id
 def upload_index_files():
     """Upload two files(index.faiss, index.pkl) to the user's folder."""
     if 'user' not in request.form:
