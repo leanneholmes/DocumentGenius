@@ -29,6 +29,7 @@ from langchain.prompts.chat import (
 from pymongo import MongoClient
 from werkzeug.utils import secure_filename
 from bs4 import BeautifulSoup
+from functools import wraps
 
 from error import bad_request
 from worker import ingest_worker
@@ -137,6 +138,7 @@ def extract_metadata(metadata):
 
 
 def validate_user_id(func):
+    @wraps(func)
     def wrapper(*args, **kwargs):
         user_id = request.headers.get('User')
 
@@ -173,6 +175,7 @@ def send_asset(path):
 
 
 @app.route("/api/answer", methods=["POST"])
+@validate_user_id
 def api_answer():
     # Sample data, use it for testing
     # data = {
