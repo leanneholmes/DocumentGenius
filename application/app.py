@@ -419,6 +419,7 @@ def combined_json():
 
 
 @app.route('/api/upload', methods=['POST'])
+@validate_user_id
 def upload_file():
     """Upload a file to get vectorized and indexed."""
     if 'user' not in request.form:
