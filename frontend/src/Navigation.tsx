@@ -35,6 +35,8 @@ export default function Navigation({
   const selectedDocs = useSelector(selectSelectedDocs);
 
   const [isDocsListOpen, setIsDocsListOpen] = useState(false);
+  const { isLoaded, isSignedIn, user } = useUser();
+  console.log(user?.id);
 
   const isApiKeySet = useSelector(selectApiKeyStatus);
   const [apiKeyModalState, setApiKeyModalState] =
@@ -51,20 +53,21 @@ export default function Navigation({
   const apiHost = import.meta.env.VITE_API_HOST || 'https://docsapi.arc53.com';
 
   const handleDeleteClick = (index: number, doc: Doc) => {
-    const docPath = 'indexes/' + 'local' + '/' + doc.name;
-
-    fetch(`${apiHost}/api/delete_old?path=${docPath}`, {
-      method: 'GET',
-    })
-      .then(() => {
-        // remove the image element from the DOM
-        const imageElement = document.querySelector(
-          `#img-${index}`,
-        ) as HTMLElement;
-        const parentElement = imageElement.parentNode as HTMLElement;
-        parentElement.parentNode?.removeChild(parentElement);
+    if (isSignedIn) {
+      const docPath = 'indexes/' + user.id + '/' + doc.name;
+      fetch(`${apiHost}/api/delete_old?path=${docPath}`, {
+        method: 'GET',
       })
-      .catch((error) => console.error(error));
+        .then(() => {
+          // remove the image element from the DOM
+          const imageElement = document.querySelector(
+            `#img-${index}`,
+          ) as HTMLElement;
+          const parentElement = imageElement.parentNode as HTMLElement;
+          parentElement.parentNode?.removeChild(parentElement);
+        })
+        .catch((error) => console.error(error));
+    }
   };
 
   useOutsideAlerter(
@@ -95,8 +98,6 @@ export default function Navigation({
     });
   }, []);
 
-  const { isLoaded, isSignedIn, user } = useUser();
-  console.log(user?.id);
   useEffect(() => {
     if (user?.id) {
       const indexData = {
@@ -189,7 +190,7 @@ export default function Navigation({
                           <p className="ml-5 flex-1 overflow-hidden overflow-ellipsis whitespace-nowrap py-3">
                             {doc.name} {doc.version}
                           </p>
-                          {doc.location === 'local' ? (
+                          {doc.location === user.id ? (
                             <img
                               src={Exit}
                               alt="Exit"
