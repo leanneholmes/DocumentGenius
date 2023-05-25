@@ -29,6 +29,7 @@ from langchain.prompts.chat import (
 from pymongo import MongoClient
 from werkzeug.utils import secure_filename
 from bs4 import BeautifulSoup
+from functools import wraps
 
 from error import bad_request
 from worker import ingest_worker
@@ -137,13 +138,16 @@ def extract_metadata(metadata):
 
 
 def validate_user_id(func):
+    @wraps(func)
     def wrapper(*args, **kwargs):
         user_id = request.headers.get('User')
 
         # If user ID not found in headers, check the request body
         if not user_id:
             data = request.get_json()
-            user_id = data.get('user') if data else None
+            user_id = data.get('user')
+            if not data:
+                user_id = request.form['user']
 
         # Add your userid here, would be better to store in a file
         allowed_user_ids = [
@@ -173,6 +177,7 @@ def send_asset(path):
 
 
 @app.route("/api/answer", methods=["POST"])
+@validate_user_id
 def api_answer():
     # Sample data, use it for testing
     # data = {
@@ -378,6 +383,7 @@ def api_feedback():
 
 
 @app.route('/api/combine', methods=['GET'])
+@validate_user_id
 def combined_json():
     user = request.headers.get('User')
     """Provide json file with combined available indexes."""
@@ -413,6 +419,7 @@ def combined_json():
 
 
 @app.route('/api/upload', methods=['POST'])
+@validate_user_id
 def upload_file():
     """Upload a file to get vectorized and indexed."""
     if 'user' not in request.form:
@@ -454,6 +461,7 @@ def upload_file():
 
 
 @app.route('/api/get_docs', methods=['POST'])
+@validate_user_id
 def serve_html():
     print(request.json)
     user = secure_filename(request.json['user'])
@@ -542,6 +550,7 @@ def task_status():
 
 # Backgound task api
 @app.route('/api/upload_index', methods=['POST'])
+@validate_user_id
 def upload_index_files():
     """Upload two files(index.faiss, index.pkl) to the user's folder."""
     if 'user' not in request.form:

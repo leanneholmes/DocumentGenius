@@ -383,6 +383,7 @@ template {
 }
 
 .docNavigation {
+  height: 100vh;
   background-color: white;
   border-right: 2px solid #8e8e8e;
   overflow-x: hidden;
