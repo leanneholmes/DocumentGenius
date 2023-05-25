@@ -159,3 +159,66 @@
   color: #0074d6;
   text-decoration: underline;
 }
+
+.stackoverflow-logo {
+  max-width: 30%;
+  margin-bottom: 1em;
+  margin-top: -0.5em;
+}
+
+.tags-label {
+  font-size: 0.9em;
+  margin-right: 0.2em;
+}
+
+.stack-divider {
+  margin-top: 0.5em;
+}
+
+.comment-wrapper {
+  display: inline-block;
+  font-size: 0.8em;
+  margin-top: 1em;
+}
+
+.comment-number {
+  float: left;
+  width: 2%;
+}
+
+.comment-content {
+  float: right;
+  width: 96%;
+  margin-left: 0.5em;
+}
+
+.comment-tag {
+  display: inline-block;
+  background-color: #e1ecf4;
+  color: #117dcf;
+  padding: 0.3em;
+  border-radius: 5px;
+}
+
+.comment-date {
+  color: grey;
+}
+
+.answer-user-wrapper {
+  width: 100%;
+  display: inline-block;
+}
+.answer-user-info {
+  float: right;
+}
+
+.answer-date {
+  font-size: 0.8em;
+  color: grey;
+}
+
+.answer-user-name {
+  font-size: 0.9em;
+  color: #117dcf;
+  float: right;
+}
