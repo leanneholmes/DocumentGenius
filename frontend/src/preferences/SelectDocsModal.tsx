@@ -8,6 +8,7 @@ import {
   selectSelectedDocs,
 } from './preferenceSlice';
 import { getDocs, Doc } from './preferenceApi';
+import { useUser } from '@clerk/clerk-react';
 
 export default function APIKeyModal({
   modalState,
@@ -26,6 +27,7 @@ export default function APIKeyModal({
   );
   const [isDocsListOpen, setIsDocsListOpen] = useState(false);
   const [isError, setIsError] = useState(false);
+  const { isSignedIn, user } = useUser();
 
   function handleSubmit() {
     if (!localSelectedDocs) {
@@ -44,8 +46,10 @@ export default function APIKeyModal({
 
   useEffect(() => {
     async function requestDocs() {
-      const data = await getDocs();
-      dispatch(setSourceDocs(data));
+      if (isSignedIn) {
+        const data = await getDocs(user.id);
+        dispatch(setSourceDocs(data));
+      }
     }
 
     requestDocs();

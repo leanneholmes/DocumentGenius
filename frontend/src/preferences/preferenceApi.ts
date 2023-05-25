@@ -12,13 +12,13 @@ export type Doc = {
 };
 
 //Fetches all JSON objects from the source. We only use the objects with the "model" property in SelectDocsModal.tsx. Hopefully can clean up the source file later.
-export async function getDocs(): Promise<Doc[] | null> {
+export async function getDocs(_userid: string): Promise<Doc[] | null> {
   try {
     const apiHost =
       import.meta.env.VITE_API_HOST || 'https://docsapi.arc53.com'; // This needs to be change to your hosted backend url
 
     const headers = new Headers();
-    headers.append('User', 'local');
+    headers.append('User', _userid);
 
     const response = await fetch(apiHost + '/api/combine', {
       headers: headers,

@@ -80,8 +80,10 @@ export default function Upload({
             .then((data) => data.json())
             .then((data) => {
               if (data.status == 'SUCCESS') {
-                if (data.result.limited === true) {
-                  getDocs().then((data) => dispatch(setSourceDocs(data)));
+                if (data.result.limited === true && isSignedIn) {
+                  getDocs(user.id).then((data) =>
+                    dispatch(setSourceDocs(data)),
+                  );
                   setProgress(
                     (progress) =>
                       progress && {
@@ -90,8 +92,10 @@ export default function Upload({
                         failed: true,
                       },
                   );
-                } else {
-                  getDocs().then((data) => dispatch(setSourceDocs(data)));
+                } else if (isSignedIn) {
+                  getDocs(user.id).then((data) =>
+                    dispatch(setSourceDocs(data)),
+                  );
                   setProgress(
                     (progress) =>
                       progress && {
