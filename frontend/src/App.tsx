@@ -20,7 +20,7 @@ export default function App() {
   );
 
   return (
-    <div className="app">
+    <div className="h-screen">
       <ClerkProvider publishableKey={clerkPubKey}>
         <SignedIn>
           <QueryPage />
