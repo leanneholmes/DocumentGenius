@@ -7,26 +7,14 @@ export function fetchAnswerApi(
   question: string,
   apiKey: string,
   selectedDocs: Doc,
+  userid: string,
 ): Promise<Answer> {
   let namePath = selectedDocs.name;
   if (selectedDocs.language === namePath) {
     namePath = '.project';
   }
 
-  let docPath = 'default';
-  if (selectedDocs.location === 'local') {
-    docPath = 'local' + '/' + selectedDocs.name + '/';
-  } else if (selectedDocs.location === 'remote') {
-    docPath =
-      selectedDocs.language +
-      '/' +
-      namePath +
-      '/' +
-      selectedDocs.version +
-      '/' +
-      selectedDocs.model +
-      '/';
-  }
+  const docPath = userid + '/' + selectedDocs.name + '/';
 
   return fetch(apiHost + '/api/answer', {
     method: 'POST',
@@ -39,6 +27,7 @@ export function fetchAnswerApi(
       embeddings_key: apiKey,
       history: localStorage.getItem('chatHistory'),
       active_docs: docPath,
+      user: userid,
     }),
   })
     .then((response) => {

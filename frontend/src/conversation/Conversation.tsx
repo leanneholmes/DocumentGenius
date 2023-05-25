@@ -58,7 +58,10 @@ export default function Conversation(props: ConversationProps) {
 
   const handleQuestion = (question: string) => {
     dispatch(addQuery({ prompt: question }));
-    dispatch(fetchAnswer({ question }));
+    if (isSignedIn) {
+      const userid = user.id;
+      dispatch(fetchAnswer({ question, userid }));
+    }
   };
 
   const handleFeedback = (query: Query, feedback: FEEDBACK, index: number) => {

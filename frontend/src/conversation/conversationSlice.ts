@@ -10,15 +10,16 @@ const initialState: ConversationState = {
 
 export const fetchAnswer = createAsyncThunk<
   Answer,
-  { question: string },
+  { question: string; userid: string },
   { state: RootState }
->('fetchAnswer', async ({ question }, { getState }) => {
+>('fetchAnswer', async ({ question, userid }, { getState }) => {
   const state = getState();
-
+  console.log('sending answer' + userid);
   const answer = await fetchAnswerApi(
     question,
     state.preference.apiKey,
     state.preference.selectedDocs!,
+    userid,
   );
   return answer;
 });

@@ -217,15 +217,7 @@ def api_answer():
     try:
         # check if the vectorstore is set
         if "active_docs" in data:
-            if data["active_docs"].split("/")[0] == "local":
-                if data["active_docs"].split("/")[1] == "default":
-                    vectorstore = ""
-                else:
-                    vectorstore = "indexes/" + data["active_docs"]
-            else:
-                vectorstore = "vectors/" + data["active_docs"]
-            if data['active_docs'] == "default":
-                vectorstore = ""
+            vectorstore = "indexes/" + data["active_docs"]
         else:
             vectorstore = ""
         print('vector store is' + vectorstore)
